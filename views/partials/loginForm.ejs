@@ -1,0 +1,22 @@
+<div id="formDiv">
+    <form action="/users/login" method="post" id="form">
+        <div class="formContainer">
+            <label for="username">Benutzername</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div class="formContainer">
+            <label for="password">Passwort</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+
+        <div id="registerDiv">
+            <p>Noch kein Konto?</p>
+            <a href="/signup">Registrieren</a>
+        </div>
+
+        <div id="buttonDiv">
+            <input type="submit" class="formBtn" value="Anmelden">
+            <input type="reset" class="formBtn" value="Zurücksetzen">
+        </div>
+    </form>
+</div>
