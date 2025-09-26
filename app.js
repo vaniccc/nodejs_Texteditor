@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 // Routen Imports
 import userRoute from './routes/userRoute.js';
+import editorRoute from './routes/editorRoute.js';
 
 // Statischer Verweis auf den public Ordner
 app.use(express.static('public'));
@@ -33,6 +34,7 @@ app.get('/editor', (req, res) => {
 
 //Routes
 app.use('/users', userRoute);
+app.use('/texteditor', editorRoute);
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
