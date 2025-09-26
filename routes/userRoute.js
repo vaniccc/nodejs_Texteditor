@@ -33,29 +33,61 @@ router.post('/signup', async (req, res) => {
                 const checkUserByUsername = getSelectedUser(username);
             
                 if(!checkUserByUsername) {
-                    const passwordHashed = bcrypt.hash(password, 10).toString();
+                    const passwordHashed = (await bcrypt.hash(password, 10)).toString();
 
                     createUser(username, passwordHashed);
 
-                    showAllUsers();
+                    //showAllUsers();
+
+                    res.redirect('http://localhost:3000/editor');
                 } else {
                     console.error('Der Benutzername ist bereits vergeben!');
                 }
             } catch(e) {
-                console.error('SIGNUP ERROR #01: ' + e);
+                console.error('SIGNUP ERROR #02: ' + e);
             }
         }
 
-
     } catch (e) {
-        console.error('SIGNUP ERROR #02: ' + e);
+        console.error('SIGNUP ERROR #01: ' + e);
     }
-
 });
 
+router.post('/login', async (req, res) => {
 
+    const { username, password } = req.body;
 
+    //console.log('LOGIN EINGABE: ' + username + ', ' + password);
 
+    try {
+        const result = getSelectedUser(username);
+
+        if(!result) 
+            console.log('Anmeldedaten flasch');
+        
+        else {
+            try {
+                const passwordCompare = await bcrypt.compare(password, result.password_hash);
+
+                //console.log('HASHED PW: ' + passwordCompare);
+
+                if(!passwordCompare) {
+                    console.log('Anmeldedaten falsch');
+                    //console.log('HASHED PW: ' + result.password_hash);
+                }
+                else {
+                    console.log('Anmeldedaten richtig');
+                    res.redirect('http://localhost:3000/editor');
+                }
+            } catch (e) {
+                console.log('LOGIN ERROR #02: ' + e);
+            }
+        }
+
+    } catch(e) {
+        console.log('LOGIN ERROR #01: ' + e);
+    }
+});
 
 
 export default router;

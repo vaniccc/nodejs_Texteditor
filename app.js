@@ -10,23 +10,23 @@ const PORT = process.env.PORT || 3000;
 // Routen Imports
 import userRoute from './routes/userRoute.js';
 
-// Statische Dateien
+// Statischer Verweis auf den public Ordner
 app.use(express.static('public'));
 
-// ejs als View Engine auswählen
+// ejs als View Engine setzen
 app.set('view engine', 'ejs');
 
-// render index page
+// Default Route "/" definiert, welche pages/Index rendert
 app.get('/', (req, res) => {
-    res.render('pages/index');
+    res.render('index');
 });
 
-// render signup page
+// Route "/signup" definiert, welche pages/signup rendert
 app.get('/signup', (req, res) => {
     res.render('pages/signup');
 });
 
-// render Editor Page
+// Route "/editor" definiert, welche pages/editor rendert
 app.get('/editor', (req, res) => {
     res.render('pages/texteditor');
 });
