@@ -1,5 +1,6 @@
 // Plugin Imports
 import express from 'express';
+import session from 'express-session';
 
 // Server
 const app = express();
@@ -30,6 +31,16 @@ app.get('/signup', (req, res) => {
 app.get('/editor', (req, res) => {
     res.render('pages/texteditor');
 });
+
+// Session
+
+app.use(session({
+    secret: '123',
+    //Daten Merken?
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+}));
 
 //Routes
 app.use('/users', userRoute);

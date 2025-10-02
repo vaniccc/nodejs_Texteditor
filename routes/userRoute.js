@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 const router = express.Router();
 
 
-import { createUser, showAllUsers, getSelectedUser} from '../db/db.js';
+import { createUser, getSelectedUser} from '../db/db.js';
 
 router.use(express.urlencoded({ extended: true }));
 
@@ -79,6 +79,11 @@ router.post('/login', async (req, res) => {
                     console.log('Anmeldedaten richtig');
                     res.redirect('http://localhost:3000/editor');
                 }
+
+                req.session.result = {
+                    id: result.user_id,
+                    username: result.username
+                }
             } catch (e) {
                 console.log('LOGIN ERROR #02: ' + e);
             }
@@ -89,5 +94,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
+router.get('/logout', (req, res) => {
+    
+    req.session.destroy((err) => {
+        if(err) {
+            console.error('LOGOUT ERROR  #01:  ' + err);
+            res.status(500).json({ error: 'Logout fehlgeschlagen'});
+        } else {
+            res.clearCookie('connect.sid');
+            //res.json({ message: 'Logout erfolgreich.'});
+            console.log('Logout erfolgreich');
+        }
+    });
+});
 
 export default router;

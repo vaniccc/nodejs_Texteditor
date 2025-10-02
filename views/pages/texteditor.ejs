@@ -9,40 +9,47 @@
 </head>
 <body>
     <main>
-        <header>
-            <div id="headerButtonDiv">
+        <header id="header">
+            
+            <div class="dropdown">
+                <button class="headerButton" id="fileHeaderButton">Datei</button>
+            
+                <div class="dropdownContent">
+                    <button onclick="openFile()" id="fileDropdown">Öffnen</button>
+                    <button onclick="saveFile()">Speichern</button>
+                    <button onclick="saveFileAs()">Speichern unter</button>
+                    <button onclick="closeFile()">Schließen</button>
+                </div>
+            </div>
         
-                <div class="dropdown">
-                    <button class="headerButton">Datei</button>
-                
-                    <div class="dropdownContent">
-                        <button onclick="saveFile()">Datei speichern</button>
-                        <button onclick="document.getElementById('fileInput').click()">Datei öffnen </button>
-                        <input type="file" id="fileInput" style="display: none;" onchange="loadFile(event)">
-                        <button>Beenden</button>
-                    </div>
+            <div class="dropdown" >
+                <button class="headerButton" id="viewHeaderButton">Ansicht</button>
+            
+                <div class="dropdownContent" id="viewDropdown">
+                    <button onclick="themeSwitch()">Dark / White Mode</button>
+                    <button>...</button>
+                    <button>...</button>
                 </div>
-        
-                <div class="dropdown">
-                    <button class="headerButton">...</button>
-                
-                    <div class="dropdownContent">
-                        <button>...</button>
-                        <button>...</button>
-                        <button>...</button>
-                    </div>
-                </div>
+            </div>
 
-                <div class="dropdown">
-                    <button class="headerButton">...</button>
-                
-                    <div class="dropdownContent">
-                        <button>...</button>
-                        <button>...</button>
-                        <button>...</button>
-                    </div>
+            <div class="dropdown">
+                <button class="headerButton" id="headerButton1">...</button>
+            
+                <div class="dropdownContent" id="Dropdown">
+                    <button>...</button>
+                    <button>...</button>
+                    <button>...</button>
                 </div>
+            </div>
 
+
+            <div class="dropdown">
+                <button class="headerButton" id="userHeaderButton">User</button>
+            
+                <div class="dropdownContent">
+                    <p id="usernameDisplay"></p>
+                    <button onclick="logoutUser()" id="userDropdown">Logout</button>
+                </div>
             </div>
         </header>
     
@@ -51,34 +58,131 @@
 
         </textarea>
     </main>
-    
+
     <script>
-        function saveFile() {
-            const content = document.getElementById('editor').value;
-            const filename = prompt("Dateiname (mit .txt) eingeben:", "dokument.txt");
-            if(!filename) 
-                return;
+        let fileHandle = null;
 
-            const link = document.createElement("a");
-            link.download = filename;
-
-            const blob = new Blob([content], { type: "text/plain" });
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            URL.revokeObjectURL(link.href);
+        async function openFile() {
+            try {
+                const [handle] = await window.showOpenFilePicker({
+                    types: [{
+                        description: "Textdateien",
+                        accept: {" text/plain ": [".txt"] }
+                    }]
+                });
+                fileHandle = handle;
+                const file = await handle.getFile();
+                const text = await file.text();
+                document.getElementById('editor').value = text;
+            } catch(e) {
+                alert('OPEN FILE ERROR #001:: ' + e);
+            }
         }
 
-        function loadFile(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('editor').value = e.target.result;
-            };
-            reader.readAsText(file);
+        async function saveFile() {
+            try {
+                if(!fileHandle) {
+                    return saveFileAs();
+                }
+                const writable = await fileHandle.createWritable();
+                await writable.write(document.getElementById('editor').value);
+                await writable.close();
+            } catch(e) {
+                alert('SAVE FILE ERROR #001: ' + e);
+            }
         }
 
+        document.addEventListener("keydown", function (e) {
+            if((e.ctrlKey || e.metaKey) && e.key === "s") {
+                e.preventDefault();
+                saveFile();
+            }
+        });
+
+        async function saveFileAs() {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: "newTextFile.txt",
+                    types: [{
+                        description: "Textdateien",
+                        accept: { "text/plain ": [".txt"] }
+                    }]
+                });
+                fileHandle = handle;
+                await saveFile();
+            } catch (e) {
+                alert('DOWNLOAD FILE ERROR #001: ' + e);
+            }
+        }
+
+        function closeFile() {
+            if(fileHandle) {
+                if(confirm('Möchtest du die Datei wirklich schließen?\n \n Ungespeicherte Änderungen können verloren gehen.')){
+                    fileHandle = null;
+                    document.getElementById('editor').value = "";
+                }
+            }
+        }
+             
+        //################################## Theme Switch ##########################################
+
+        function themeSwitch() {
+            var editor = document.getElementById('editor');
+            editor.classList.toggle('textarea-dark-mode');
+
+            var header = document.getElementById('header');
+            header.classList.toggle('header-dark-mode');
+
+            //Buttons
+            var fileHeaderButton = document.getElementById('fileHeaderButton');
+            fileHeaderButton.classList.toggle('headerButton-dark-mode');
+
+            var viewHeaderButton = document.getElementById('viewHeaderButton');
+            viewHeaderButton.classList.toggle('headerButton-dark-mode');
+
+            var headerButton1 = document.getElementById('headerButton1');
+            headerButton1.classList.toggle('headerButton-dark-mode');
+
+            var userHeaderButton = document.getElementById('userHeaderButton');
+            userHeaderButton.classList.toggle('headerButton-dark-mode');
+
+        }
+
+        //############################################################################
+
+
+        function logoutUser() {
+            window.location.href = "../"
+        }
+        // function downloadFile() {
+        //     try {
+            
+        //     const filename = prompt("Dateiname (mit .txt) eingeben:", "dokument.txt");
+        //     if(!filename) 
+        //         return;
+
+        //     const link = document.createElement("a");
+        //     link.download = filename;
+
+        //     const blob = new Blob([content], { type: "text/plain" });
+        //     link.href = URL.createObjectURL(blob);
+        //     link.click();
+        //     URL.revokeObjectURL(link.href);
+        //     } catch(e) {
+        //         alert('FILE DOWNLOAD ERROR #001: ' + e);
+        //     }
+        // }
+
+        // function loadFile(event) {
+        //     const file = event.target.files[0];
+        //     if(!file) return;
+
+        //     const reader = new FileReader();
+        //     reader.onload = function (e) {
+        //         document.getElementById('editor').value = e.target.result;
+        //     };
+        //     reader.readAsText(file);
+        // }
     </script>
 </body>
 </html>
