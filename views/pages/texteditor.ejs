@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                 <button class="headerButton" id="headerButton1">...</button>
             
                 <div class="dropdownContent" id="Dropdown">
@@ -40,7 +40,7 @@
                     <button>...</button>
                     <button>...</button>
                 </div>
-            </div>
+            </div> -->
 
 
             <div class="dropdown">
@@ -140,8 +140,8 @@
             var viewHeaderButton = document.getElementById('viewHeaderButton');
             viewHeaderButton.classList.toggle('headerButton-dark-mode');
 
-            var headerButton1 = document.getElementById('headerButton1');
-            headerButton1.classList.toggle('headerButton-dark-mode');
+            // var headerButton1 = document.getElementById('headerButton1');
+            // headerButton1.classList.toggle('headerButton-dark-mode');
 
             var userHeaderButton = document.getElementById('userHeaderButton');
             userHeaderButton.classList.toggle('headerButton-dark-mode');
@@ -150,10 +150,26 @@
 
         //############################################################################
 
+        async function logoutUser() {
+            try {
+            const res = await fetch('/users/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
 
-        function logoutUser() {
-            window.location.href = "../"
+            const data = await res.json();
+
+            if(data.success) {
+                window.location.href = "../";
+            } else {
+                console.error('LOGOUT ERROR #02 ' + e);
+            }
+            
+            } catch(e) {
+                console.error('LOGOUT ERROR #01: ' + e);
+            }
         }
+
         // function downloadFile() {
         //     try {
             

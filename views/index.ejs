@@ -12,8 +12,8 @@
     <title>Login - Texteditor</title>
 </head>
 <body>
-    <main>
-        <div id="container">
+    <main id="main">
+        <div id="container" class="container">
 
             <!-- Header -->
             <header>
@@ -34,12 +34,12 @@
 
                     <div id="registerDiv">
                         <p>Noch kein Konto?</p>
-                        <a href="/signup">Registrieren</a>
+                        <a href="/signup" id="signupLink" class="signupLinkClass">Registrieren</a>
                     </div>
 
                     <div id="buttonDiv">
-                        <input type="submit" class="formBtn" value="Anmelden">
-                        <input type="reset" class="formBtn" value="Zurücksetzen">
+                        <input type="submit" class="formBtn" id="loginBtn" value="Anmelden">
+                        <input type="reset" class="formBtn" id="resetBtn" value="Zurücksetzen">
                     </div>
                 </form>
             </div>
@@ -47,6 +47,35 @@
             <!-- Footer -->
             <%- include('./partials/footer'); -%>
         </div>
+
+        <button id="themeSwitch" class="themeSwitchBtn" onclick="switchTheme()"><i class="material-icons themeSwitchIconClass" id="themeSwitchIcon" >sunny</i></button>
     </main>
+    <script>
+        function switchTheme() {
+            var background = document.getElementById('main');
+            background.classList.toggle('background-dark-mode');
+
+            var container = document.getElementById('container');
+            container.classList.toggle('container-dark-mode');
+
+            var a = document.getElementById('signupLink');
+            a.classList.toggle('a-dark-mode');
+
+
+            // form Buttons
+            var loginBtn = document.getElementById('loginBtn');
+            loginBtn.classList.toggle('formBtn-dark-mode');
+
+            var resetBtn = document.getElementById('resetBtn');
+            resetBtn.classList.toggle('formBtn-dark-mode');
+
+            // Theme Switch Button
+            var themeSwitchBtn = document.getElementById('themeSwitch');
+            themeSwitchBtn.classList.toggle('themeSwitch-dark-mode');
+
+            var themeSwitchIcon = document.getElementById('themeSwitchIcon');
+            themeSwitchIcon.classList.toggle('themeSwitchIcon-dark-mode');
+        }
+    </script>
 </body>
 </html>

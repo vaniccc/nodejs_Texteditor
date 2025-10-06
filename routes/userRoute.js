@@ -76,6 +76,11 @@ router.post('/login', async (req, res) => {
                     //console.log('HASHED PW: ' + result.password_hash);
                 }
                 else {
+                    req.session.user = {
+                    id: result.user_id,
+                    username: result.username
+                }
+
                     console.log('Anmeldedaten richtig');
                     res.redirect('http://localhost:3000/editor');
                 }
@@ -95,7 +100,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     
     req.session.destroy((err) => {
         if(err) {
@@ -105,6 +110,9 @@ router.get('/logout', (req, res) => {
             res.clearCookie('connect.sid');
             //res.json({ message: 'Logout erfolgreich.'});
             console.log('Logout erfolgreich');
+            res.json({ success: true });
+            
+            // res.redirect('/');
         }
     });
 });

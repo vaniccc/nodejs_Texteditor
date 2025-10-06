@@ -6,6 +6,7 @@ main {
 /* Header Style */
 
 header {
+    display: flex;
     height: 3%;
     background-color: lightgrey;
     border-bottom: 1px solid grey;
@@ -71,6 +72,7 @@ textarea {
     padding: 5px;
     transition: all 0.25s;
     border-color: Transparent;
+    outline: none;
 }
 
 /* Dark Mode */
