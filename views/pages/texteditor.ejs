@@ -22,26 +22,21 @@
                 </div>
             </div>
         
+            <div class="dropdown">
+                <button class="headerButton" id="formatHeaderButton">Format</button>
+            
+                <div class="dropdownContent" id="formatDropdown">
+                    <button id="lineBreakBtn" onclick="toggleLineBreak()">Zeilenumbruch <span class="checkmark" id="checkmark">✓</span></button>
+                </div>
+            </div>
+
             <div class="dropdown" >
                 <button class="headerButton" id="viewHeaderButton">Ansicht</button>
             
                 <div class="dropdownContent" id="viewDropdown">
                     <button onclick="themeSwitch()">Dark / White Mode</button>
-                    <button>...</button>
-                    <button>...</button>
                 </div>
             </div>
-
-            <!-- <div class="dropdown">
-                <button class="headerButton" id="headerButton1">...</button>
-            
-                <div class="dropdownContent" id="Dropdown">
-                    <button>...</button>
-                    <button>...</button>
-                    <button>...</button>
-                </div>
-            </div> -->
-
 
             <div class="dropdown">
                 <button class="headerButton" id="userHeaderButton">User</button>
@@ -51,6 +46,10 @@
                     <button onclick="logoutUser()" id="userDropdown">Logout</button>
                 </div>
             </div>
+
+            <!-- <div id="displayFileName">
+                <p class="fileNameClass" id="fileName"></p>
+            </div> -->
         </header>
     
         <!-- Text Area -->
@@ -60,16 +59,22 @@
     </main>
 
     <script>
-        let fileHandle = null;
 
-        async function openFile() {
+        // ######################################### File Functions ###################################
+        
+        let fileHandle = null;                                                                              
+
+        async function openFile() {                                                                         
             try {
-                const [handle] = await window.showOpenFilePicker({
+                const openPickerOptions ={                                                                  
                     types: [{
                         description: "Textdateien",
                         accept: {" text/plain ": [".txt"] }
                     }]
-                });
+                }
+
+                const [handle] = await window.showOpenFilePicker(openPickerOptions);
+                
                 fileHandle = handle;
                 const file = await handle.getFile();
                 const text = await file.text();
@@ -101,13 +106,16 @@
 
         async function saveFileAs() {
             try {
-                const handle = await window.showSaveFilePicker({
+                const savePickerOptions = {
                     suggestedName: "newTextFile.txt",
                     types: [{
                         description: "Textdateien",
                         accept: { "text/plain ": [".txt"] }
                     }]
-                });
+                }
+
+                const handle = await window.showSaveFilePicker(savePickerOptions);
+
                 fileHandle = handle;
                 await saveFile();
             } catch (e) {
@@ -123,8 +131,35 @@
                 }
             }
         }
+
+        //################################## Format Functions ##########################################
+
+        let isLineBreakOn = false;
+        
+
+        function toggleLineBreak() {
+            isLineBreakOn = !isLineBreakOn;
+            //console.log(autoLineBreak);
+
+            var checkmark = document.getElementById('checkmark');
+            checkmark.classList.toggle('checkmarkclicked'); 
+        }
+
+        document.getElementById('editor').addEventListener("focus", function (e) {
+            var editor = document.getElementById('editor');
+            if(isLineBreakOn === true) {
+                editor.style.overflowWrap = "break-word";
+                editor.style.whiteSpace = "normal";
+            }
+
+            if(isLineBreakOn === false) {
+                editor.style.whiteSpace = "nowrap";
+            }
+        });
+
+        
              
-        //################################## Theme Switch ##########################################
+        //################################## View Functions ##########################################
 
         function themeSwitch() {
             var editor = document.getElementById('editor');
@@ -140,35 +175,36 @@
             var viewHeaderButton = document.getElementById('viewHeaderButton');
             viewHeaderButton.classList.toggle('headerButton-dark-mode');
 
-            // var headerButton1 = document.getElementById('headerButton1');
-            // headerButton1.classList.toggle('headerButton-dark-mode');
+            var headerButton1 = document.getElementById('formatHeaderButton');
+            headerButton1.classList.toggle('headerButton-dark-mode');
 
             var userHeaderButton = document.getElementById('userHeaderButton');
             userHeaderButton.classList.toggle('headerButton-dark-mode');
-
         }
 
-        //############################################################################
+        //############################# User Functions #############################################
 
         async function logoutUser() {
             try {
-            const res = await fetch('/users/logout', {
-                method: 'POST',
-                credentials: 'include'
-            });
+                const res = await fetch('/users/logout', {                                          
+                    method: 'POST'
+                });
 
-            const data = await res.json();
+                const data = await res.json();
 
-            if(data.success) {
-                window.location.href = "../";
-            } else {
-                console.error('LOGOUT ERROR #02 ' + e);
-            }
+                if(data.success) {
+                    window.location.href = "../";
+                } else {
+                    console.error('LOGOUT ERROR #02 ' + e);
+                }
             
             } catch(e) {
                 console.error('LOGOUT ERROR #01: ' + e);
             }
         }
+
+
+        
 
         // function downloadFile() {
         //     try {

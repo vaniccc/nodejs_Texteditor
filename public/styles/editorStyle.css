@@ -61,6 +61,25 @@ header {
     display: block;
 }
 
+#lineBreakBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 16px;
+}
+
+.checkmark {
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.2s ease; 
+}
+
+.checkmarkclicked {
+    opacity: 1;
+    overflow-x: auto;
+}
+
+
 /* Text Area Style*/
 
 textarea {
@@ -69,7 +88,7 @@ textarea {
     border: 0px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
-    padding: 5px;
+    padding: 10px;
     transition: all 0.25s;
     border-color: Transparent;
     outline: none;
@@ -93,5 +112,6 @@ textarea {
     background-color: rgb(83, 80, 80);
     color: #ddd;
     transition: all 0.25s;
+    
 }
 

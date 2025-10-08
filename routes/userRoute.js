@@ -39,7 +39,7 @@ router.post('/signup', async (req, res) => {
 
                     //showAllUsers();
 
-                    res.redirect('http://localhost:3000/editor');
+                    res.redirect('http://localhost:3000/');
                 } else {
                     console.error('Der Benutzername ist bereits vergeben!');
                 }
@@ -77,17 +77,12 @@ router.post('/login', async (req, res) => {
                 }
                 else {
                     req.session.user = {
-                    id: result.user_id,
-                    username: result.username
-                }
+                        id: result.user_id,
+                        username: result.username
+                    }
 
                     console.log('Anmeldedaten richtig');
                     res.redirect('http://localhost:3000/editor');
-                }
-
-                req.session.result = {
-                    id: result.user_id,
-                    username: result.username
                 }
             } catch (e) {
                 console.log('LOGIN ERROR #02: ' + e);
