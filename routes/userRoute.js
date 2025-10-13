@@ -94,6 +94,17 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/user', (req, res) => {
+    if(!req.session.user) {
+        console.log("Nicht eingeloggt");
+        return res.status(401).json({ error: 'Nicht eingeloggt'});
+    }
+    else {
+        res.json({ user: req.session.user });
+        return res.status(200);
+    } 
+});
+
 
 router.post('/logout', (req, res) => {
     

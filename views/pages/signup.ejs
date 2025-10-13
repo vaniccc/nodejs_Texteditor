@@ -43,6 +43,10 @@
                         <a href="/" id="loginLink" class="loginLinkClass">Anmelden</a>
                     </div>
 
+                    <div id="errorDiv">
+                        <p id="errMsg"></p>
+                    </div>
+
                     <div id="buttonDiv">
                         <input type="submit" class="formBtn" id="signupBtn" value="Registrieren">
                         <input type="reset" class="formBtn" id="resetBtn" value="Zurücksetzen">
@@ -82,6 +86,39 @@
             var themeSwitchIcon = document.getElementById('themeSwitchIcon');
             themeSwitchIcon.classList.toggle('themeSwitchIcon-dark-mode');
         }
+
+        // const form = document.getElementById('form').addEventListener("submit", async (e) => {
+        //     e.preventDefault();
+
+        //     const username = document.getElementById('username').value;
+        //     const password = document.getElementById('password').value;
+        //     const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+        //     const errMsg = document.getElementById('errMsg');
+
+        //     try {
+
+        //         if(username.length < 4) {
+        //             errMsg.innerHTML = "Der Benutzername muss mindestens 4 Zeichen beinhalten!";
+        //             return;
+        //         }
+
+        //         if(password.length < 8) {
+        //            errMsg.innerHTML = "Das Password muss mindestens 8 Zeichen beinhalten!";
+        //            return;
+        //         }
+
+        //         if(password != passwordConfirm) {
+        //            errMsg.innerHTML = "Passwörter stimmen nicht überein!";
+        //            return;
+        //         }
+
+        //     } catch (e) {
+        //         alert('SUBMIT FEHLER #01: ' + e);
+        //     }
+
+
+        // });
     </script>
 </body>
 </html>

@@ -39,7 +39,7 @@ app.use(session({
     //Daten Merken?
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 100 * 60 * 60}
+    cookie: { secure: false, maxAge: 1000 * 60 * 60}
 }));
 
 //Routes

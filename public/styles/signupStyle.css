@@ -29,7 +29,7 @@ form {
 }
 
 .formContainer {
-    height: 25%;
+    height: 22%;
 }
 
 .formContainer > label {
@@ -60,7 +60,7 @@ form {
 }
 
 #registerDiv {
-    height: 10%;
+    height: 5%;
     font-size: 18px;
 }
 
@@ -78,11 +78,26 @@ form {
     transition: all 0.25s;
 }
 
+#errorDiv {
+    margin: 15px 0px;
+    width: 100%;
+    height: 8%;
+    text-align: center;
+
+}
+
+#errorDiv p {
+    color: rgb(228, 94, 94);
+    font-weight: bold;
+    font-size: large;
+}
+
 #buttonDiv {
     display: flex;
     align-items: center;
     justify-content: right;
-    height: 10%;
+    height: 7%;
+    margin-bottom: 10px;
 }
 
 .formBtn {

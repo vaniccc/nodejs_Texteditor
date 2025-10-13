@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/cssReset.css">
     <link rel="stylesheet" href="/styles/editorStyle.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>Text Editor</title>
 </head>
 <body>
@@ -15,10 +16,19 @@
                 <button class="headerButton" id="fileHeaderButton">Datei</button>
             
                 <div class="dropdownContent">
-                    <button onclick="openFile()" id="fileDropdown">Öffnen</button>
+                    <button onclick="openFile()">Öffnen</button>
                     <button onclick="saveFile()">Speichern</button>
                     <button onclick="saveFileAs()">Speichern unter</button>
                     <button onclick="closeFile()">Schließen</button>
+                </div>
+            </div>
+
+             <div class="dropdown">
+                <button class="headerButton" id="tabHeaderButton">Tab</button>
+            
+                <div class="dropdownContent">
+                    <button onclick="newTab()" id="newTab">Neuer Tab</button>
+                    <button onclick="closeLastTab()">letzten Tab schließen</button>
                 </div>
             </div>
         
@@ -47,11 +57,19 @@
                 </div>
             </div>
 
-            <!-- <div id="displayFileName">
+            <!-- <div class="displayFileName">
                 <p class="fileNameClass" id="fileName"></p>
             </div> -->
+
         </header>
-    
+        
+        <div class="tabBar" id="tabBar">
+            <div class="tab" id="tab1">
+                <button class="tabBtn" onclick="selectTab()" id="btn1">Neuer Tab 1</button>
+                <button class="closeTabBtn" id="closeBtn1" onclick="closeTab()">x</button>
+            </div>
+        </div>
+
         <!-- Text Area -->
         <textarea id="editor">
 
@@ -65,7 +83,7 @@
         let fileHandle = null;                                                                              
 
         async function openFile() {                                                                         
-            try {
+            try { 
                 const openPickerOptions ={                                                                  
                     types: [{
                         description: "Textdateien",
@@ -74,13 +92,18 @@
                 }
 
                 const [handle] = await window.showOpenFilePicker(openPickerOptions);
+
+                
                 
                 fileHandle = handle;
                 const file = await handle.getFile();
                 const text = await file.text();
+                const title = await fileHandle.name;
                 document.getElementById('editor').value = text;
+                //document.getElementById('fileName').textContent = title;
+                document.getElementById('btn1').textContent = title;
             } catch(e) {
-                alert('OPEN FILE ERROR #001:: ' + e);
+                alert('OPEN FILE ERROR #01:: ' + e);
             }
         }
 
@@ -93,7 +116,7 @@
                 await writable.write(document.getElementById('editor').value);
                 await writable.close();
             } catch(e) {
-                alert('SAVE FILE ERROR #001: ' + e);
+                alert('SAVE FILE ERROR #01: ' + e);
             }
         }
 
@@ -118,16 +141,19 @@
 
                 fileHandle = handle;
                 await saveFile();
+                const title = await fileHandle.name;
+                document.getElementById('tab1').textContent = title;
             } catch (e) {
-                alert('DOWNLOAD FILE ERROR #001: ' + e);
+                alert('DOWNLOAD FILE ERROR #01: ' + e);
             }
         }
 
-        function closeFile() {
+        async function closeFile() {
             if(fileHandle) {
                 if(confirm('Möchtest du die Datei wirklich schließen?\n \n Ungespeicherte Änderungen können verloren gehen.')){
                     fileHandle = null;
                     document.getElementById('editor').value = "";
+                    document.getElementById('tab1').textContent = "Neuer Tab";
                 }
             }
         }
@@ -184,6 +210,28 @@
 
         //############################# User Functions #############################################
 
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        async function loadCurrentUser() {
+            try {
+                const res = await fetch('/users/user');
+
+                if(!res.ok) {
+                    window.location.href = '../';
+                    return;
+                }
+
+                const data = await res.json();
+
+                if(data && data.user) {
+                    usernameDisplay.textContent = 'User: ' + data.user.username;
+                }
+
+            } catch (e) {
+                console.error('LOAD USER ERROR #01: ' + e);
+            }
+        }
+
         async function logoutUser() {
             try {
                 const res = await fetch('/users/logout', {                                          
@@ -195,14 +243,183 @@
                 if(data.success) {
                     window.location.href = "../";
                 } else {
-                    console.error('LOGOUT ERROR #02 ' + e);
+                    console.error('LOGOUT ERROR #02: ' + e);
                 }
-            
             } catch(e) {
                 console.error('LOGOUT ERROR #01: ' + e);
             }
         }
 
+        loadCurrentUser();
+
+         //############################# Tab Functions #############################################
+
+        let numberOfTabs = 1;
+
+        function newTab() {
+            try {
+                
+                if(numberOfTabs <= 8) {
+
+                    numberOfTabs++;
+                    const tabBar = document.getElementById('tabBar');
+
+                    const newtab = document.createElement('div');
+                    newtab.classList.add('tab');
+
+                    var id = "tab" + numberOfTabs;
+
+                    newtab.setAttribute("id", id);
+
+                    tabBar.appendChild(newtab);
+
+
+                    const newTabBtn = document.createElement('button');
+                    newTabBtn.textContent = "Neuer Tab " + numberOfTabs;
+                    newTabBtn.classList.add('tabBtn');
+                    var btnId = "btn" + numberOfTabs;
+                    newTabBtn.setAttribute("onclick", "selectTab(this)");
+                    
+                    newTabBtn.setAttribute("id", btnId);
+                    newtab.appendChild(newTabBtn);
+
+
+                    const newCloseTabBtn = document.createElement('button');
+                    newCloseTabBtn.textContent = "x";
+                    newCloseTabBtn.classList.add('closeTabBtn');
+                    var closeBtnId = "closeBtn" + numberOfTabs;
+                    newCloseTabBtn.setAttribute("onclick", "closeTab(this)");
+                    newCloseTabBtn.setAttribute("id", closeBtnId);
+                    newtab.appendChild(newCloseTabBtn);   
+                }
+            } catch(e) {
+                console.error('NEW TAB ERROR #01: ' + e);
+            }            
+        }
+
+        function selectTab(btn) {
+            document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            console.log(`${btn.textContent} ausgewählt`);
+        }
+
+        function closeLastTab() {
+            try {
+                const element = document.getElementById('tab' + numberOfTabs);
+
+                element.remove();
+
+                numberOfTabs--;
+
+            } catch(e) {
+                console.log('CLOSE LAST TAB ERROR #01: ' + e);
+            }
+        }
+
+        function closeTab(closeBtn) {
+            const tab = closeBtn.parentElement;
+            tab.remove();
+            renumberTabs();
+        }
+
+        function renumberTabs() {
+            const tabs = document.querySelectorAll(".tab");
+            tabs.forEach((tab, index) => {
+                const tabBtn = tab.querySelector(".tabBtn");
+                tabBtn.textContent = `Neuer Tab ${index + 1}`;
+            });
+            numberOfTabs = tabs.length;
+        }
+
+
+        // function closeSelectedTab() {
+
+        //     const tab = closeBtn
+
+        //     // const tabBar = document.getElementById('tabBar');
+
+        //     // console.log(numberOfTabs);
+
+        //     // document.getElementById('closeBtn1').onclick = function() {
+        //     //     var element = document.getElementById('tab1');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn2').onclick = function() {
+        //     //     var element = document.getElementById('tab2');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn3').onclick = function() {
+        //     //     var element = document.getElementById('tab3');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn4').onclick = function() {
+        //     //     var element = document.getElementById('tab4');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn5').onclick = function() {
+        //     //     var element = document.getElementById('tab5');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn6').onclick = function() {
+        //     //     var element = document.getElementById('tab6');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn7').onclick = function() {
+        //     //     var element = document.getElementById('tab7');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn8').onclick = function() {
+        //     //     var element = document.getElementById('tab8');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+
+        //     //  document.getElementById('closeBtn9').onclick = function() {
+        //     //     var element = document.getElementById('tab9');
+        //     //     element.remove();
+
+        //     //     numberOfTabs--;
+
+        //     //     console.log(numberOfTabs);
+        //     // };
+        // }
 
         
 
