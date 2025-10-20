@@ -114,11 +114,8 @@ router.post('/logout', (req, res) => {
             res.status(500).json({ error: 'Logout fehlgeschlagen'});
         } else {
             res.clearCookie('connect.sid');
-            //res.json({ message: 'Logout erfolgreich.'});
             console.log('Logout erfolgreich');
             res.json({ success: true });
-            
-            // res.redirect('/');
         }
     });
 });

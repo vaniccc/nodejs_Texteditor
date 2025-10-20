@@ -46,5 +46,5 @@ app.use(session({
 app.use('/users', userRoute);
 
 app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
+    console.log(`Server running on ${PORT} | http://www.localhost:3000`);
 });

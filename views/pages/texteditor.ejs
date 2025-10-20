@@ -9,10 +9,10 @@
     <title>Text Editor</title>
 </head>
 <body>
-    <main>
+    <main class="main" id="main">
         <header id="header">
             
-            <div class="dropdown">
+             <div class="dropdown">
                 <button class="headerButton" id="fileHeaderButton">Datei</button>
             
                 <div class="dropdownContent">
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-             <div class="dropdown">
+            <div class="dropdown">
                 <button class="headerButton" id="tabHeaderButton">Tab</button>
             
                 <div class="dropdownContent">
@@ -56,105 +56,404 @@
                     <button onclick="logoutUser()" id="userDropdown">Logout</button>
                 </div>
             </div>
-
-            <!-- <div class="displayFileName">
-                <p class="fileNameClass" id="fileName"></p>
-            </div> -->
-
         </header>
-        
-        <div class="tabBar" id="tabBar">
-            <div class="tab" id="tab1">
-                <button class="tabBtn" onclick="selectTab()" id="btn1">Neuer Tab 1</button>
-                <button class="closeTabBtn" id="closeBtn1" onclick="closeTab()">x</button>
-            </div>
+
+        <!-- Quick Selection Bar -->
+        <div id="quickSelectionBar">
+
+            <!-- Quick Selection -->
+            <section class="qSSection" id="startSection">
+            
+                <!-- Font Selection -->
+                <div class="qSDiv" id="qSFontDiv">
+                    <div class="qSHeaderDiv">
+                        
+                        <select name="fontFamily" id="fontFamilySelection" class="comboBox" title="Schriftart wählen" onchange="changeFontFamily()">
+                            <option value="arial" selected id="arial">Arial, Helvetica, sans-serif</option>
+                            <option value="courierNew" id="courierNew">Courier New, Courier, monospace</option>
+                            <option value="timesNewRoman" id="timesNewRoman">Times New Roman, Times, serif</option>
+                        </select>
+
+                        <select name="fontSize" id="fontSizeSelection" class="comboBox" title="Schriftgröße wählen" onchange="changeFontSize()">
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="14" selected>14</option>
+                            <option value="16">16</option>
+                            <option value="18">18</option>
+                            <option value="20">20</option>
+                            <option value="24">24</option>
+                        </select>
+
+                        <div class="small-vertical-line"></div>
+
+                        <button class="qSHeaderBtn fontBold" id="fontBoldBtn" title="Fett (STRG + UMSCHALT + F)" onclick="toggleBoldFont()">F</button>
+                        <button class="qSHeaderBtn" id="fontItalicBtn" title="Kursiv (STRG + UMSCHALT + K)" onclick="toggleItalicFont()">K</button>
+                        <button class="qSHeaderBtn" id="fontUnderlinedBtn" title="Unterstreichen (STRG + UMSCHALT + U)" onclick="toggleUnderlinedFont()">U</button>
+                        <button class="qSHeaderBtn" id="fontCrossedBtn" title="Durchstreichen" onclick="toggleStrikeThroughFont()">ab</button>
+                        
+                        <div class="small-vertical-line"></div>
+                    </div>
+
+                    <footer class="qSFooterDiv">
+                        <p>Schriftart</p>
+                    </footer>
+                </div>
+
+                <div class="big-vertical-line"></div>
+
+                <!-- Tab Selection -->
+                <div class="qSDiv" id="qSTabDiv">
+                    <div class="qSHeaderDiv">
+                        <button class="material-icons qSHeaderBtn" title="Neuen Tab erstellen" id="addTabBtn" onclick="newTab()">add</button>
+                        <button class="material-icons qSHeaderBtn" title="Zuletzt geöffnetes Tab schließen" onclick="closeLastTab()">close</button>
+                    </div>
+                    <footer class="qSFooterDiv">
+                        <p>Tabs</p>
+                    </footer>
+                </div>
+
+                <div class="big-vertical-line"></div>
+
+                <!-- View Selection -->
+                <div class="qSDiv" id="qSViewDiv">
+                    <button class="qSBigBtn material-icons" title="Ansichts Modus wechseln" onclick="themeSwitch()" id="qSThemeSwitchBtn">bedtime</button> 
+                </div>
+
+                <div class="big-vertical-line"></div>
+
+                <!-- User Selection -->
+                <div class="qSDiv" id="qSUserDiv">
+                    <button class="qSBigBtn material-icons" title="Ausloggen" onclick="logoutUser()" id="logoutBtn">logout</button>
+                </div>
+                <div class="big-vertical-line"></div>
+            </section>            
         </div>
 
-        <!-- Text Area -->
-        <textarea id="editor">
+        <!-- Tab Bar -->
+        <div class="tabBar" id="tabBar"></div>
 
-        </textarea>
+        <!-- Text Area -->
+        <div id="editor" contenteditable="true"></div>
+
     </main>
 
     <script>
 
-        // ######################################### File Functions ###################################
-        
-        let fileHandle = null;                                                                              
+        const tabs = {}; 
+        let activeTabId = "tab1"; 
+        let numberOfTabs = 0;
 
-        async function openFile() {                                                                         
-            try { 
-                const openPickerOptions ={                                                                  
-                    types: [{
-                        description: "Textdateien",
-                        accept: {" text/plain ": [".txt"] }
-                    }]
+        // ######################################### File Functions ###################################
+
+        async function openFile() {
+            try {
+                if (!activeTabId) {
+                    activeTabId = "tab1";
+                    console.error('No Tab selected before trying to open a File - Tab created automaticly');
+                    return;
                 }
 
-                const [handle] = await window.showOpenFilePicker(openPickerOptions);
+                const [handle] = await window.showOpenFilePicker({
+                    types: [{
+                    description: "Textdateien",
+                    accept: { "text/plain": [".txt"] }
+                    }]
+                });
 
-                
-                
-                fileHandle = handle;
                 const file = await handle.getFile();
                 const text = await file.text();
-                const title = await fileHandle.name;
-                document.getElementById('editor').value = text;
-                //document.getElementById('fileName').textContent = title;
-                document.getElementById('btn1').textContent = title;
-            } catch(e) {
-                alert('OPEN FILE ERROR #01:: ' + e);
+                const title = handle.name;
+
+                tabs[activeTabId] = { fileHandle: handle, text };
+
+                document.getElementById("editor").innerHTML = text;
+
+                const tabBtn = document.querySelector(`#${activeTabId} .tabBtn`);
+                tabBtn.textContent = title;
+            } catch (e) {
+                console.error('ERROR #001: OPEN FILE ERROR: ' + e);
+                alert('Fehler beim Öffnen der Datei (Fehler #001)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
         async function saveFile() {
             try {
-                if(!fileHandle) {
+                const tab = tabs[activeTabId];
+
+                if(!tab)  {
+                    console.error('Kein Tab selektiert - Neuen Tab automatisch erstellt');
+                    createFirstTab();
+                    return;
+                }
+
+                if (!tab.fileHandle) {
                     return saveFileAs();
                 }
-                const writable = await fileHandle.createWritable();
-                await writable.write(document.getElementById('editor').value);
+
+                const content = document.getElementById("editor").innerHTML;
+
+                const writable = await tab.fileHandle.createWritable();
+                await writable.write(content);
                 await writable.close();
-            } catch(e) {
-                alert('SAVE FILE ERROR #01: ' + e);
+
+                tab.text = content; 
+            } catch (e) {
+                console.error('ERROR #011: SAVE FILE ERROR: ' + e);
+                alert('Fehler beim Speichern der Datei (Fehler #011)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
-        document.addEventListener("keydown", function (e) {
-            if((e.ctrlKey || e.metaKey) && e.key === "s") {
-                e.preventDefault();
-                saveFile();
-            }
-        });
-
         async function saveFileAs() {
             try {
-                const savePickerOptions = {
+
+                if (!activeTabId) {
+                    alert('Kein aktiver Tab! Bitte wähle ein Tab aus');
+                    return;
+                }
+            
+                const handle = await window.showSaveFilePicker({
                     suggestedName: "newTextFile.txt",
                     types: [{
-                        description: "Textdateien",
-                        accept: { "text/plain ": [".txt"] }
+                    description: "Textdateien",
+                    accept: { "text/plain": [".txt"] }
                     }]
-                }
+                });
 
-                const handle = await window.showSaveFilePicker(savePickerOptions);
+                const content = document.getElementById("editor").innerHTML;
+                const writable = await handle.createWritable();
+                await writable.write(content);
+                await writable.close();
 
-                fileHandle = handle;
-                await saveFile();
-                const title = await fileHandle.name;
-                document.getElementById('tab1').textContent = title;
+                tabs[activeTabId] = { fileHandle: handle, text: content };
+
+                const title = handle.name;
+                document.querySelector(`#${activeTabId} .tabBtn`).textContent = title;
             } catch (e) {
-                alert('DOWNLOAD FILE ERROR #01: ' + e);
+                console.error('ERROR #021: SAVE FILE AS ERROR: ' + e);
+                alert('Fehler beim "Speichern unter" der Datei (Fehler #021)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
         async function closeFile() {
-            if(fileHandle) {
-                if(confirm('Möchtest du die Datei wirklich schließen?\n \n Ungespeicherte Änderungen können verloren gehen.')){
-                    fileHandle = null;
-                    document.getElementById('editor').value = "";
-                    document.getElementById('tab1').textContent = "Neuer Tab";
+            try {
+                if (!activeTabId) {
+                    console.log('No Active Tab!');
+                    alert('Kein aktiver Tab!');
+                    return;
+                } 
+                
+                const tab = tabs[activeTabId];
+
+                if (!tab) {
+                    console.log('No Active Tab or File!');
+                    alert('Kein aktiver Tab oder Datei!');
+                    return;
                 }
+                
+                if (confirm("Möchtest du die Datei wirklich schließen? \n Ungespeicherte Änderungen können verloren gehen.")) {
+                    tabs[activeTabId] = { fileHandle: null, text: "" }
+                    document.getElementById("editor").innerHTML = "";
+                    document.querySelector(`#${activeTabId} .tabBtn`).textContent = "Neuer Tab";
+                }
+            } catch(e) {
+                console.error('ERROR #031: CLOSING FILE ERROR: ' + e);
+                alert('Fehler beim schließen der Datei (Fehler #031)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+
+        document.addEventListener("keydown", function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+            e.preventDefault();
+            saveFile();
+            }
+        });
+
+        //################################## Font Format Functions ##########################################
+
+        let isStrongSet = false;
+        let isItalicSet = false;
+        let isUnderlineSet = false;
+        let isStrikeThroughSet = false;
+
+        function toggleBoldFont() {
+            try {
+
+                // const selection = window.getSelection();
+
+                // if (!selection.rangeCount) return;
+
+                // const range = selection.getRangeAt(0);
+                    
+                // if (range.collapsed) return;
+
+
+                // const strong = document.createElement("strong");
+
+                if(!isStrongSet) {
+                    // range.surroundContents(strong);
+                    document.execCommand('bold');
+
+                    isStrongSet = true;
+
+                    const btn = document.getElementById('fontBoldBtn');
+                    btn.classList.add('toggleActive');
+                } else {
+                    document.execCommand('bold', false, null);
+
+                    isStrongSet = false;
+
+                    const btn = document.getElementById('fontBoldBtn');
+                    btn.classList.remove('toggleActive');
+                }
+            } catch(e) {
+                console.error('ERROR #101 - TOGGLE BOLD FONT ERROR: ' + e);
+                alert('Fehler beim verändern der Schrift(Fett) (Fehler #101)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+
+        function toggleItalicFont() {
+            try {
+                if(!isItalicSet) {
+                    document.execCommand('italic');
+
+                    isItalicSet = true;
+
+                    const btn = document.getElementById('fontItalicBtn');
+                    btn.classList.add('toggleActive');
+                } else {
+                    document.execCommand('italic', false, null);
+
+                    isItalicSet = false;
+
+                    const btn = document.getElementById('fontItalicBtn');
+                    btn.classList.remove('toggleActive');
+                }
+            } catch(e) {
+                console.error('ERROR #111 - TOGGLE ITALIC FONT ERROR: ' + e);
+                alert('Fehler beim verändern der Schrift(Kursiv) (Fehler #111)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+
+        function toggleUnderlinedFont() {
+            try {
+                if(!isUnderlineSet) {
+                    document.execCommand('underline');
+
+                    isUnderlineSet = true;
+
+                    const btn = document.getElementById('fontUnderlinedBtn');
+                    btn.classList.add('toggleActive');
+                } else {
+                    document.execCommand('underline', false, null);
+
+                    isUnderlineSet = false;
+
+                    const btn = document.getElementById('fontUnderlinedBtn');
+                    btn.classList.remove('toggleActive');
+                }
+            } catch(e) {
+                console.error('ERROR #121 - TOGGLE UNDERLINED FONT ERROR: ' + e);
+                alert('Fehler beim verändern der Schrift(Unterstrichen) (Fehler #121)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+
+        function toggleStrikeThroughFont() {
+            try {
+                if(!isStrikeThroughSet) {
+                    document.execCommand('strikeThrough');
+
+                    isStrikeThroughSet = true;
+
+                    const btn = document.getElementById('fontCrossedBtn');
+                    btn.classList.add('toggleActive');
+                } else {
+                    document.execCommand('strikeThrough', false, null);
+
+                    isStrikeThroughSet = false;
+
+                    const btn = document.getElementById('fontCrossedBtn');
+                    btn.classList.remove('toggleActive');
+                }
+            } catch(e) {
+                console.error('ERROR #131 - TOGGLE STRIKETHROUGH FONT ERROR: ' + e);
+                alert('Fehler beim verändern der Schrift(Durchgestrichen) (Fehler #131)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+
+        function changeFontSize() {
+            try {
+                var selection = document.getElementById('fontSizeSelection');
+                var value = selection.value;
+
+
+                const editor = document.getElementById('editor');
+
+                switch(value) {
+                    case "10":
+                        console.log('Schriftgröße 10 ausgewählt.');
+                        editor.style.fontSize = "10px";
+                        break;
+                    case "11":
+                        console.log('Schriftgröße 11 ausgewählt.');
+                        editor.style.fontSize = "11px";
+                        break;
+                    case "12":
+                        console.log('Schriftgröße 12 ausgewählt.');
+                        editor.style.fontSize = "12px";
+                        break;
+                    case "14":
+                        console.log('Schriftgröße 14 ausgewählt.');
+                        editor.style.fontSize = "14px";
+                        break;
+                    case "16":
+                        console.log('Schriftgröße 16 ausgewählt.');
+                        editor.style.fontSize = "16px";
+                        break;
+                     case "18":
+                        console.log('Schriftgröße 18 ausgewählt.');
+                        editor.style.fontSize = "18px";
+                        break;
+                    case "20":
+                        console.log('Schriftgröße 20 ausgewählt.');
+                        editor.style.fontSize = "20px";
+                        break;
+                    case "24":
+                        console.log('Schriftgröße 24 ausgewählt.');
+                        editor.style.fontSize = "24px";
+                        break;
+                }
+            } catch(e) {
+                console.error('ERROR #141 - CHANGING FONT SIZE ERROR: ' + e);
+                alert('Fehler beim Ändern der Schriftgröße (Fehler #141)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+        changeFontSize();
+
+        function changeFontFamily() {
+            try {
+                var selection = document.getElementById('fontFamilySelection');
+                var value = selection.value;
+
+                const editor = document.getElementById('editor');
+
+                switch(value) {
+                    case "arial":
+                        console.log('Schriftart auf "Arial" gesetzt.');
+                        editor.style.fontFamily = "Arial, Helvetica, sans-serif";
+                        break;
+                    case "courierNew":
+                        console.log('Schriftart auf "Courier" gesetzt.');
+                        editor.style.fontFamily = "'Courier New', Courier, monospace";
+                        break;
+                    case 'timesNewRoman':
+                        console.log('Schriftart auf "Times New Roman" gesetzt.');
+                        editor.style.fontFamily = "'Times New Roman', Times, serif";
+                        break;
+                }
+            } catch(e) {
+                console.error('ERROR #151 - CHANGING FONT FAMILY ERROR: ' + e);
+                alert('Fehler beim ändern der Schriftart (Fehler #151)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
@@ -162,10 +461,8 @@
 
         let isLineBreakOn = false;
         
-
         function toggleLineBreak() {
             isLineBreakOn = !isLineBreakOn;
-            //console.log(autoLineBreak);
 
             var checkmark = document.getElementById('checkmark');
             checkmark.classList.toggle('checkmarkclicked'); 
@@ -181,36 +478,59 @@
             if(isLineBreakOn === false) {
                 editor.style.whiteSpace = "nowrap";
             }
-        });
-
-        
+        });    
              
         //################################## View Functions ##########################################
 
         function themeSwitch() {
-            var editor = document.getElementById('editor');
-            editor.classList.toggle('textarea-dark-mode');
+            try {
 
-            var header = document.getElementById('header');
-            header.classList.toggle('header-dark-mode');
+                // Main Theme Switch
+                var main = document.getElementById('main');
+                main.classList.toggle('main-dark-mode');
 
-            //Buttons
-            var fileHeaderButton = document.getElementById('fileHeaderButton');
-            fileHeaderButton.classList.toggle('headerButton-dark-mode');
 
-            var viewHeaderButton = document.getElementById('viewHeaderButton');
-            viewHeaderButton.classList.toggle('headerButton-dark-mode');
+                // Header Theme Switch
+                var header = document.getElementById('header');
+                header.classList.toggle('header-dark-mode');
 
-            var headerButton1 = document.getElementById('formatHeaderButton');
-            headerButton1.classList.toggle('headerButton-dark-mode');
+                var fileHeaderButton = document.getElementById('fileHeaderButton');
+                fileHeaderButton.classList.toggle('headerButton-dark-mode');
 
-            var userHeaderButton = document.getElementById('userHeaderButton');
-            userHeaderButton.classList.toggle('headerButton-dark-mode');
+                var tabHeaderButton = document.getElementById('tabHeaderButton');
+                tabHeaderButton.classList.toggle('headerButton-dark-mode');
+
+                var viewHeaderButton = document.getElementById('viewHeaderButton');
+                viewHeaderButton.classList.toggle('headerButton-dark-mode');
+
+                var headerButton1 = document.getElementById('formatHeaderButton');
+                headerButton1.classList.toggle('headerButton-dark-mode');
+
+                var userHeaderButton = document.getElementById('userHeaderButton');
+                userHeaderButton.classList.toggle('headerButton-dark-mode');
+
+
+                // Quick Selection Bar Theme Switch
+
+                                
+
+                // Tab Bar Theme Switch
+                var tabBar = document.getElementById('tabBar');
+                tabBar.classList.toggle('tabBar-dark-mode');
+
+                // Editor Theme Switch
+                var editor = document.getElementById('editor');
+                editor.classList.toggle('textarea-dark-mode');
+
+            } catch(e) {
+                console.error('ERROR #201 - THEME SWITCH ERROR: ' + e);
+                alert('Fehler beim ändern der Ansichts Modi (Fehler #201)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
         }
 
         //############################# User Functions #############################################
 
-        const usernameDisplay = document.getElementById('usernameDisplay');
+        
 
         async function loadCurrentUser() {
             try {
@@ -223,12 +543,15 @@
 
                 const data = await res.json();
 
+                const usernameDisplay = document.getElementById('usernameDisplay');
+
                 if(data && data.user) {
                     usernameDisplay.textContent = 'User: ' + data.user.username;
                 }
 
             } catch (e) {
-                console.error('LOAD USER ERROR #01: ' + e);
+                console.error('ERROR #301 - LOAD USER ERROR: ' + e);
+                alert('Fehler beim Laden des Benutzers (Fehler #301)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
@@ -243,215 +566,227 @@
                 if(data.success) {
                     window.location.href = "../";
                 } else {
-                    console.error('LOGOUT ERROR #02: ' + e);
+                    console.error('ERROR #312 - LOGOUT ERROR: ' + e);
+                    alert('Fehler beim Ausloggen (Fehler #312)! \n Weitere Informationen sind in der Konsole zu finden.');
                 }
             } catch(e) {
-                console.error('LOGOUT ERROR #01: ' + e);
+                console.error('ERROR #311 - LOGOUT ERROR: ' + e);
+                alert('Fehler beim Ausloggen (Fehler #311)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
         loadCurrentUser();
 
-         //############################# Tab Functions #############################################
+        //############################# Tab Functions #############################################
 
-        let numberOfTabs = 1;
+        function createFirstTab() {
+            try {
+                numberOfTabs++;
+                const tabBar = document.getElementById("tabBar");
+
+                const firstTab = document.createElement("div");
+
+                firstTab.classList.add("tab");
+                const id = "tab" + numberOfTabs;
+                firstTab.id = id;
+                tabBar.appendChild(firstTab);
+
+
+                const newTabBtn = document.createElement('button');
+                newTabBtn.textContent = "Neuer Tab";  // + numberOfTabs
+                newTabBtn.classList.add('tabBtn');
+                //var btnId = "btn" + numberOfTabs;
+                newTabBtn.setAttribute("onclick", "selectTab(this)");
+                //newTabBtn.setAttribute("id", btnId);
+                firstTab.appendChild(newTabBtn);
+
+
+                const newCloseTabBtn = document.createElement('button');
+                newCloseTabBtn.textContent = "x";
+                newCloseTabBtn.classList.add('closeTabBtn');
+                //var closeBtnId = "closeBtn" + numberOfTabs;
+                newCloseTabBtn.setAttribute("onclick", "closeTab(this)");
+                //newCloseTabBtn.setAttribute("id", closeBtnId);
+                firstTab.appendChild(newCloseTabBtn);  
+
+                
+
+                tabs[id] = { fileHandle: null, text: "" };
+                selectTab(firstTab.querySelector(".tabBtn"));
+
+            } catch(e) {
+                console.error('ERROR #401 - CREATING FIRST TAB ERROR: ' + e);
+                alert('Fehler beim Erstellen des ersten Tabs (Fehler #401)! \n Weitere Informationen sind in der Konsole zu finden.')
+            }
+        }
+
+        createFirstTab();
 
         function newTab() {
             try {
-                
-                if(numberOfTabs <= 8) {
 
-                    numberOfTabs++;
-                    const tabBar = document.getElementById('tabBar');
-
-                    const newtab = document.createElement('div');
-                    newtab.classList.add('tab');
-
-                    var id = "tab" + numberOfTabs;
-
-                    newtab.setAttribute("id", id);
-
-                    tabBar.appendChild(newtab);
-
-
-                    const newTabBtn = document.createElement('button');
-                    newTabBtn.textContent = "Neuer Tab " + numberOfTabs;
-                    newTabBtn.classList.add('tabBtn');
-                    var btnId = "btn" + numberOfTabs;
-                    newTabBtn.setAttribute("onclick", "selectTab(this)");
-                    
-                    newTabBtn.setAttribute("id", btnId);
-                    newtab.appendChild(newTabBtn);
-
-
-                    const newCloseTabBtn = document.createElement('button');
-                    newCloseTabBtn.textContent = "x";
-                    newCloseTabBtn.classList.add('closeTabBtn');
-                    var closeBtnId = "closeBtn" + numberOfTabs;
-                    newCloseTabBtn.setAttribute("onclick", "closeTab(this)");
-                    newCloseTabBtn.setAttribute("id", closeBtnId);
-                    newtab.appendChild(newCloseTabBtn);   
+                if (numberOfTabs >= 9) {
+                    return alert("Maximal 9 Tabs erlaubt!");
                 }
+
+                numberOfTabs++;
+                const tabBar = document.getElementById("tabBar");
+
+                const newTab = document.createElement("div");
+                newTab.classList.add("tab");
+                const id = "tab" + numberOfTabs;
+                newTab.id = id;
+
+                tabBar.appendChild(newTab);
+
+                
+                const newTabBtn = document.createElement('button');
+                newTabBtn.textContent = "Neuer Tab";  // + numberOfTabs
+                newTabBtn.classList.add('tabBtn');
+                //var btnId = "btn" + numberOfTabs;
+                newTabBtn.setAttribute("onclick", "selectTab(this)");
+                //newTabBtn.setAttribute("id", btnId);
+                newTab.appendChild(newTabBtn);
+
+
+                const newCloseTabBtn = document.createElement('button');
+                newCloseTabBtn.textContent = "x";
+                newCloseTabBtn.classList.add('closeTabBtn');
+                //var closeBtnId = "closeBtn" + numberOfTabs;
+                newCloseTabBtn.setAttribute("onclick", "closeTab(this)");
+                //newCloseTabBtn.setAttribute("id", closeBtnId);
+                newTab.appendChild(newCloseTabBtn);  
+
+
+                tabs[id] = { fileHandle: null, text: "" };
+                selectTab(newTab.querySelector(".tabBtn"));
+
             } catch(e) {
-                console.error('NEW TAB ERROR #01: ' + e);
-            }            
+                console.error('ERROR #411 - CREATING NEW TAB ERROR: ' + e);
+                alert('Fehler beim erstellen eines neuen Tabs (Fehler #411)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
         }
 
         function selectTab(btn) {
-            document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            console.log(`${btn.textContent} ausgewählt`);
+            try{
+
+            document.querySelectorAll(".tabBtn").forEach(b => b.classList.remove("tabActive"));
+            btn.classList.add("tabActive");
+
+            const tab = btn.parentElement;
+            activeTabId = tab.id;
+
+            console.log('Selected Tab: ' + activeTabId);
+
+            const currentText = tabs[activeTabId]?.text || "";
+            document.getElementById("editor").innerHTML = currentText;
+
+            } catch(e) {
+                console.error('ERROR #421 - SELECT TAB ERROR: ' + e);
+                alert('Fehler beim Selektieren eines Tabs (Fehler #421)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
         }
 
         function closeLastTab() {
             try {
-                const element = document.getElementById('tab' + numberOfTabs);
 
-                element.remove();
+                if(numberOfTabs <= 1) {
+                    return alert('Es muss mindest ein Tab geöffnet bleiben!');
+                }
 
-                numberOfTabs--;
+                const tab = document.getElementById('tab' + numberOfTabs);
+                const id = tab.id;
+
+                var currentTabWasActive = false;
+
+                if(id === activeTabId) {
+                    currentTabWasActive = true;
+                }
+
+                console.log('Tab to delete: ' + id);
+                console.log('Was Current Tab deleted: ' + currentTabWasActive);
+
+                delete tabs[id];
+
+                console.log(id + ' - Tab deleted');
+                
+                tab.remove();
+
+                console.error(numberOfTabs);
+
+                renumberTabs();
+
+                console.error(numberOfTabs);
+
+                if(currentTabWasActive) {
+                    selectTab(document.querySelector('.tabBtn'));
+                }
 
             } catch(e) {
-                console.log('CLOSE LAST TAB ERROR #01: ' + e);
+                console.error('ERROR #431 - CLOSE LAST TAB ERROR: ' + e);
+                alert('Fehler beim Schließen des letzten Tabs (Fehler #431)! \n Weitere Informationen sind in der Konsole zu finden.');
             }
         }
 
         function closeTab(closeBtn) {
-            const tab = closeBtn.parentElement;
-            tab.remove();
-            renumberTabs();
+            try {
+
+                if(numberOfTabs <= 1) {
+                    console.error('Es muss mindestens ein Tab geöffnet sein.');
+                    alert('Es muss mindestens ein Tab geöffnet sein.');
+                    return;
+                }
+
+                const tab = closeBtn.parentElement;
+                const id = tab.id;
+
+                var currentTabWasActive = false;
+
+                if(id === activeTabId) {
+                    currentTabWasActive = true;
+                }
+
+                console.log('Tab to delete: ' + id);
+                console.log('Was Current Tab deleted: ' + currentTabWasActive);
+
+                delete tabs[id];
+
+                console.log('Tab with id "' + id + '" deleted!');
+                
+                tab.remove();
+                
+                console.error(numberOfTabs);
+
+                renumberTabs();
+
+                console.error(numberOfTabs);
+
+                if(currentTabWasActive) {
+                    selectTab(document.querySelector('.tabBtn'));
+                }
+
+            } catch(e) {
+                console.error('ERROR #441 - CLOSING TAB ERROR: ' + e);
+                alert('Fehler beim Schließen eines Tabs (Fehler #441)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
         }
 
         function renumberTabs() {
+            try {
+
             const tabs = document.querySelectorAll(".tab");
+
             tabs.forEach((tab, index) => {
-                const tabBtn = tab.querySelector(".tabBtn");
-                tabBtn.textContent = `Neuer Tab ${index + 1}`;
+                var newindex = index + 1;
+                tab.id = 'tab' + newindex;
             });
             numberOfTabs = tabs.length;
-        }
-
-
-        // function closeSelectedTab() {
-
-        //     const tab = closeBtn
-
-        //     // const tabBar = document.getElementById('tabBar');
-
-        //     // console.log(numberOfTabs);
-
-        //     // document.getElementById('closeBtn1').onclick = function() {
-        //     //     var element = document.getElementById('tab1');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn2').onclick = function() {
-        //     //     var element = document.getElementById('tab2');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn3').onclick = function() {
-        //     //     var element = document.getElementById('tab3');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn4').onclick = function() {
-        //     //     var element = document.getElementById('tab4');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn5').onclick = function() {
-        //     //     var element = document.getElementById('tab5');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn6').onclick = function() {
-        //     //     var element = document.getElementById('tab6');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn7').onclick = function() {
-        //     //     var element = document.getElementById('tab7');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn8').onclick = function() {
-        //     //     var element = document.getElementById('tab8');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-
-        //     //  document.getElementById('closeBtn9').onclick = function() {
-        //     //     var element = document.getElementById('tab9');
-        //     //     element.remove();
-
-        //     //     numberOfTabs--;
-
-        //     //     console.log(numberOfTabs);
-        //     // };
-        // }
-
-        
-
-        // function downloadFile() {
-        //     try {
             
-        //     const filename = prompt("Dateiname (mit .txt) eingeben:", "dokument.txt");
-        //     if(!filename) 
-        //         return;
-
-        //     const link = document.createElement("a");
-        //     link.download = filename;
-
-        //     const blob = new Blob([content], { type: "text/plain" });
-        //     link.href = URL.createObjectURL(blob);
-        //     link.click();
-        //     URL.revokeObjectURL(link.href);
-        //     } catch(e) {
-        //         alert('FILE DOWNLOAD ERROR #001: ' + e);
-        //     }
-        // }
-
-        // function loadFile(event) {
-        //     const file = event.target.files[0];
-        //     if(!file) return;
-
-        //     const reader = new FileReader();
-        //     reader.onload = function (e) {
-        //         document.getElementById('editor').value = e.target.result;
-        //     };
-        //     reader.readAsText(file);
-        // }
-    </script>
+            } catch(e) {
+                console.error('ERROR #451 - RENUMBER TABS ERROR: ' + e);
+                alert('Fehler beim neu nummerieren der Tabs (Fehler #451)! \n Weitere Informationen sind in der Konsole zu finden.');
+            }
+        }
+        </script>
 </body>
 </html>

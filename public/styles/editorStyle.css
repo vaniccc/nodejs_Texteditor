@@ -1,4 +1,4 @@
-main {
+.main {
     width: 100%;
     height: 100%;
 }
@@ -18,6 +18,7 @@ header {
     height: 100%;
     border: none;
     background-color: lightgrey;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     transition: all 0.25s;
 }
 
@@ -31,6 +32,8 @@ header {
     display: inline-block;
     height: 100%;
 }
+
+/* Dropdown Style */
 
 .dropdownContent {
     display: none;
@@ -88,13 +91,169 @@ header {
     overflow-x: auto;
 }
 
-.displayFileName {
-    position: relative;
-    display: flex;
-    min-width: 70px;
+/* Selection Bar Style*/
+
+#quickSelectionBar {
+    height: 6%;
+    border-bottom: 1px solid black;
+}
+
+.qSSection {
+    width: 100%;
     height: 100%;
-    left: 30%;
+}
+
+#userSection {
+    display: none;
+}
+
+.qSDiv {
+    float: left;
+}
+
+.qSHeaderDiv {
+    display: flex;
     align-items: center;
+    width: 100%;
+    height: 50%;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.qSHeaderBtn {
+    width: 1.5rem;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    transition: all 0.25s;
+}
+
+.qSHeaderBtn:hover {
+    background-color: lightgray;
+    transition: all 0.25s;
+}
+
+.toggleActive {
+    background-color: gray;
+    color: #ddd;
+}
+
+.qSBigBtn {
+    width: 15%;
+    height: 80%;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.small-vertical-line {
+    display: inline-block;
+    height: 70%;
+    width: 2px;
+    background-color: grey;
+    margin: 0px 10px;
+}
+
+.big-vertical-line {
+    float: left;
+    height: 90%;
+    width: 2px;
+    background-color: grey;
+    margin: 3px 10px;
+}
+
+.comboBox {
+    border: 1px solid black;
+    outline: none;
+    border-radius: 5px;
+}
+
+.qSFooterDiv {
+    display: flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+.qSFooterDiv p {
+    font-size: 14px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* Font Div Style (Start) */
+
+#qSFontDiv {
+    width: 20%;
+    height: 100%;
+}
+
+#fontFamilySelection {
+    width: 30%;
+    margin-right: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#arial {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#courierNew {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#timesNewRoman {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.fontBold {
+    font-weight: bold;
+}
+
+#fontItalicBtn {
+    font-style: italic;
+}
+
+#fontUnderlinedBtn {
+    text-decoration: underline;
+}
+
+#fontCrossedBtn {
+    text-decoration: line-through;
+}
+
+#qSTabDiv {
+    width: 5%;
+    height: 100%;
+}
+
+#addTabBtn {
+    margin-right: 5px;
+}
+
+#qSViewDiv {
+    width: 3%;
+    height: 100%;
+}
+
+#qSThemeSwitchBtn {
+    width: 85%;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#qSUserDiv {
+    width: 3%;
+    height: 100%;
+}
+
+#logoutBtn {
+    width: 85%;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 /* Tab Style */
@@ -103,23 +262,22 @@ header {
     width: 100%;
     height: 4%;
     border-bottom: 1px solid black;
-    margin-top: 5px;   
+    transition: all 0.25s;
 }
 
 .tab {
     float: left; 
     position: relative;
-    /* display: flex;
-    align-items: center;
-    justify-content: space-between; */
     width: 10%;
-    height: 100%;
+    height: 80%;
     margin-left: 10px;
+    margin-top: 7px;  
     border: 1px solid black;
     border-bottom: 0px;
     border-radius: 10px 10px 0px 0px;
     background-color: lightgray;
-    padding: 0px 10px 0 0;
+    padding-right: 10px;
+    transition: all 0.25s;
 }
 
 .tabBtn {
@@ -135,14 +293,12 @@ header {
     transition: all 0.25s;
 }
 
-
-
 .tabBtn:hover {
     background-color: rgb(185, 182, 182);
     transition: all 0.25s;
 }
 
-.active {
+.tabActive {
     background-color: rgb(158, 157, 157);
     transition: all 0.25s;
 }
@@ -150,12 +306,13 @@ header {
 .closeTabBtn{
     position: absolute;
     right: 5px;
-    bottom: 8px;
+    bottom: 5px;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     border: none;
     background-color: transparent;
+    transition: all 0.25s;
 }
 
 .closeTabBtn:hover {
@@ -170,9 +327,9 @@ header {
 
 /* Text Area Style*/
 
-textarea {
+#editor {
     width: 100%;
-    height: 92.1%;
+    height: 87%;
     border: 0px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
@@ -180,25 +337,35 @@ textarea {
     transition: all 0.25s;
     border-color: Transparent;
     outline: none;
+    background-color: transparent;
 }
 
 /* Dark Mode */
 
-.textarea-dark-mode {
+.main-dark-mode {
     background-color: rgb(107, 105, 105);
-    color: #ddd;
     transition: all 0.25s;
 }
 
 .header-dark-mode {
-    background-color: rgb(83, 80, 80);
+    background-color: rgb(63, 62, 62);
     border-bottom: 1px solid white;
     transition: all 0.25s;
 }
 
 .headerButton-dark-mode {
-    background-color: rgb(83, 80, 80);
+    background-color: rgb(63, 62, 62);
     color: #ddd;
     transition: all 0.25s;
 }
 
+.tabBar-dark-mode {
+    background-color: rgb(90, 90, 90);
+    border-bottom: 1px solid white;
+    transition: all 0.25s;
+}
+
+.textarea-dark-mode {
+    color: #ddd;
+    transition: all 0.25s;
+}
