@@ -58,66 +58,8 @@
             <%- include('../partials/footer'); -%>
         </div>
 
-         <button id="themeSwitch" class="themeSwitchBtn" onclick="switchTheme()"><i class="material-icons themeSwitchIconClass" id="themeSwitchIcon" >sunny</i></button>
+         <button id="signupThemeSwitchBtn" class="themeSwitchBtn"><i class="material-icons themeSwitchIconClass" id="themeSwitchIcon" >sunny</i></button>
     </main>
-    <script>
-        function switchTheme() {
-            var background = document.getElementById('main');
-            background.classList.toggle('background-dark-mode');
-
-            var container = document.getElementById('container');
-            container.classList.toggle('container-dark-mode');
-
-            var a = document.getElementById('loginLink');
-            a.classList.toggle('a-dark-mode');
-
-            // Form Buttons
-            var signupBtn = document.getElementById('signupBtn');
-            signupBtn.classList.toggle('formBtn-dark-mode');
-
-            var resetBtn = document.getElementById('resetBtn');
-            resetBtn.classList.toggle('formBtn-dark-mode');
-
-            // Theme Switch Button
-            var themeSwitchBtn = document.getElementById('themeSwitch');
-            themeSwitchBtn.classList.toggle('themeSwitch-dark-mode');
-
-            var themeSwitchIcon = document.getElementById('themeSwitchIcon');
-            themeSwitchIcon.classList.toggle('themeSwitchIcon-dark-mode');
-        }
-
-        // const form = document.getElementById('form').addEventListener("submit", async (e) => {
-        //     e.preventDefault();
-
-        //     const username = document.getElementById('username').value;
-        //     const password = document.getElementById('password').value;
-        //     const passwordConfirm = document.getElementById('passwordConfirm').value;
-
-        //     const errMsg = document.getElementById('errMsg');
-
-        //     try {
-
-        //         if(username.length < 4) {
-        //             errMsg.innerHTML = "Der Benutzername muss mindestens 4 Zeichen beinhalten!";
-        //             return;
-        //         }
-
-        //         if(password.length < 8) {
-        //            errMsg.innerHTML = "Das Password muss mindestens 8 Zeichen beinhalten!";
-        //            return;
-        //         }
-
-        //         if(password != passwordConfirm) {
-        //            errMsg.innerHTML = "Passwörter stimmen nicht überein!";
-        //            return;
-        //         }
-
-        //     } catch (e) {
-        //         alert('SUBMIT FEHLER #01: ' + e);
-        //     }
-
-
-        // });
-    </script>
+    <script type="text/javascript" src="/js/view.js" defer></script>
 </body>
 </html>

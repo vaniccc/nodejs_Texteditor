@@ -48,34 +48,10 @@
             <%- include('./partials/footer'); -%>
         </div>
 
-        <button id="themeSwitch" class="themeSwitchBtn" onclick="switchTheme()"><i class="material-icons themeSwitchIconClass" id="themeSwitchIcon">sunny</i></button>
+        <button id="loginThemeSwitchBtn" class="themeSwitchBtn"><i class="material-icons themeSwitchIconClass" id="themeSwitchIcon">sunny</i></button>
     </main>
-    <script>
-        function switchTheme() {
-            var background = document.getElementById('main');
-            background.classList.toggle('background-dark-mode');
 
-            var container = document.getElementById('container');
-            container.classList.toggle('container-dark-mode');
-
-            var a = document.getElementById('signupLink');
-            a.classList.toggle('a-dark-mode');
-
-
-            // form Buttons
-            var loginBtn = document.getElementById('loginBtn');
-            loginBtn.classList.toggle('formBtn-dark-mode');
-
-            var resetBtn = document.getElementById('resetBtn');
-            resetBtn.classList.toggle('formBtn-dark-mode');
-
-            // Theme Switch Button
-            var themeSwitchBtn = document.getElementById('themeSwitch');
-            themeSwitchBtn.classList.toggle('themeSwitch-dark-mode');
-
-            var themeSwitchIcon = document.getElementById('themeSwitchIcon');
-            themeSwitchIcon.classList.toggle('themeSwitchIcon-dark-mode');
-        }
-    </script>
+    <script type="text/javascript" src="/js/view.js" defer></script>
+    
 </body>
 </html>

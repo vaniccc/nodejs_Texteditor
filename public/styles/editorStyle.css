@@ -93,18 +93,15 @@ header {
 
 /* Selection Bar Style*/
 
-#quickSelectionBar {
+.qSBar {
     height: 6%;
-    border-bottom: 1px solid black;
 }
 
 .qSSection {
     width: 100%;
     height: 100%;
-}
-
-#userSection {
-    display: none;
+    border-bottom: 1px solid black;
+    transition: all 0.25s;
 }
 
 .qSDiv {
@@ -116,7 +113,6 @@ header {
     align-items: center;
     width: 100%;
     height: 50%;
-    padding-left: 5px;
     padding-top: 5px;
 }
 
@@ -145,6 +141,15 @@ header {
     height: 80%;
     margin-left: 5px;
     margin-top: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: transparent;
+    transition: all 0.25s;
+}
+
+.qSBigBtn:hover {
+    background-color: lightgray;
+    transition: all 0.25s;
 }
 
 .small-vertical-line {
@@ -167,7 +172,8 @@ header {
     border: 1px solid black;
     outline: none;
     border-radius: 5px;
-}
+    background-color: transparent;
+} 
 
 .qSFooterDiv {
     display: flex;
@@ -184,9 +190,40 @@ header {
 
 /* Font Div Style (Start) */
 
+#selectable-Div {
+    position: relative;
+    width: 70px;
+    height: 90%;
+}
+
+#selectable-Div input {
+    position: absolute;
+    top: 0px; 
+    left: 2px;
+    width: 50px;
+    border: none;
+    outline: none;
+    padding: 1px;
+    text-align: center;
+}
+
+#fontSizeSelection {
+    position: absolute;
+    top: 0px; 
+    right: 0px;
+    width: 20px;
+    border: none;
+}
+
+#sizeInput {
+    background-color: transparent;
+}
+
 #qSFontDiv {
     width: 20%;
     height: 100%;
+    padding-left: 5px;
+    transition: all 0.25s;
 }
 
 #fontFamilySelection {
@@ -230,8 +267,9 @@ header {
     height: 100%;
 }
 
-#addTabBtn {
-    margin-right: 5px;
+#qSTabHeaderDiv {
+    align-items: center;
+    justify-content: center;
 }
 
 #qSViewDiv {
@@ -241,8 +279,6 @@ header {
 
 #qSThemeSwitchBtn {
     width: 85%;
-    border: 1px solid black;
-    border-radius: 5px;
 }
 
 #qSUserDiv {
@@ -250,10 +286,8 @@ header {
     height: 100%;
 }
 
-#logoutBtn {
+#qSLogoutBtn {
     width: 85%;
-    border: 1px solid black;
-    border-radius: 5px;
 }
 
 /* Tab Style */
@@ -266,12 +300,12 @@ header {
 }
 
 .tab {
-    float: left; 
+    float: left;
     position: relative;
     width: 10%;
     height: 80%;
     margin-left: 10px;
-    margin-top: 7px;  
+    margin-top: 7px;
     border: 1px solid black;
     border-bottom: 0px;
     border-radius: 10px 10px 0px 0px;
@@ -329,15 +363,63 @@ header {
 
 #editor {
     width: 100%;
-    height: 87%;
+    height: 84%;
     border: 0px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
     padding: 10px;
     transition: all 0.25s;
-    border-color: Transparent;
     outline: none;
     background-color: transparent;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* Footer */
+
+.footer {
+    height: 3%;
+    border-top: 1px solid black;
+    background-color: lightgrey;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.footerDiv {
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 5%;
+    height: 100%;
+}
+
+.zoomDiv {
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 20%;
+}
+
+.zoomDiv span {
+    margin-right: 10px;
+}
+
+.zoomDiv p {
+    height: 100%;
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.zoomDiv input {
+    width: 60%;
+    margin-left: 3px;
+}
+
+.zoomDiv output {
+    width: 10%;
+    margin-left: 15px;
 }
 
 /* Dark Mode */
@@ -347,6 +429,7 @@ header {
     transition: all 0.25s;
 }
 
+
 .header-dark-mode {
     background-color: rgb(63, 62, 62);
     border-bottom: 1px solid white;
@@ -355,17 +438,74 @@ header {
 
 .headerButton-dark-mode {
     background-color: rgb(63, 62, 62);
-    color: #ddd;
+    color: white;
     transition: all 0.25s;
 }
 
-.tabBar-dark-mode {
+
+.qSBar-dark-mode {
     background-color: rgb(90, 90, 90);
     border-bottom: 1px solid white;
     transition: all 0.25s;
 }
 
-.textarea-dark-mode {
-    color: #ddd;
+.qSDiv-dark-mode {
+    color: white;
+    transition: all 0.25s;
+}
+
+.qS-smallBtn-dark-mode {
+    color: white;
+    transition: all 0.25s;
+}
+
+.qS-smallBtn-dark-mode:hover {
+    background-color: rgb(158, 157, 157);
+}
+
+.qS-bigBtn-dark-mode {
+    border: 1px solid white;
+    color: white;
+    transition: all 0.25s;
+}
+
+.qS-bigBtn-dark-mode:hover {
+    background-color: rgb(158, 157, 157);
+}
+
+.comboBox-dark-mode {
+    border: 1px solid white;
+    color: white;
+    transition: all 0.25;
+}
+
+.comboBox-dark-mode option {
+    background-color: gray;
+    color: white;
+}
+
+.sizeInput-dark-mode {
+    color: white;
+    transition: all 0.25;
+}
+
+
+.tabBar-dark-mode {
+    background-color: rgb(110, 110, 110);
+    border-bottom: 1px solid white;
+    transition: all 0.25s;
+}
+
+
+.editor-dark-mode {
+    color: white;
+    transition: all 0.25s;
+}
+
+
+.footer-dark-mode {
+    background-color: rgb(63, 62, 62);
+    border-top: 1px solid white;
+    color: white;
     transition: all 0.25s;
 }
