@@ -1,5 +1,9 @@
 // #################################### User Functions ####################################
 
+const usernameDisplay = document.getElementById('usernameDisplay');
+const logoutBtn = document.getElementById('logoutBtn');
+const qSLogoutBtn = document.getElementById('qSLogoutBtn');
+
 async function loadCurrentUser() {
     try {
 
@@ -11,8 +15,6 @@ async function loadCurrentUser() {
         }
 
         const data = await res.json();
-
-        const usernameDisplay = document.getElementById('usernameDisplay');
 
         if(data && data.user) {
             usernameDisplay.textContent = 'User: ' + data.user.username;
@@ -49,5 +51,5 @@ async function logoutUser() {
 
 // ################# Eventlisteners (Function Calls) #################
 
-document.getElementById('logoutBtn').addEventListener("click", logoutUser);
-document.getElementById('qSLogoutBtn').addEventListener("click", logoutUser);
+logoutBtn.addEventListener("click", logoutUser);
+qSLogoutBtn.addEventListener("click", logoutUser);

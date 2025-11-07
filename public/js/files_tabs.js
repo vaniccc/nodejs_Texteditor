@@ -6,14 +6,14 @@ const tabBar = document.getElementById("tabBar");
 
 const newTabBtn = document.getElementById('newTabBtn');
 const qSAddTabBtn = document.getElementById('qSAddTabBtn');
-const closeLastTabBtn = document.getElementById('closeLastTabBtn');
-const qSCloseTabBtn = document.getElementById('qSCloseTabBtn');
 
 const openFileBtn = document.getElementById('openFileBtn');
 const saveFileBtn = document.getElementById('saveFileBtn');
 const saveFileAsBtn = document.getElementById('saveFileAsBtn');
-const closeFileBtn = document.getElementById('closeFileBtn');
 
+const qSOpenFileBtn = document.getElementById('qSOpenFileBtn');
+const qSSaveFileBtn = document.getElementById('qSSaveFileBtn');
+const qSSaveFileAsBtn = document.getElementById('qSSaveFileAsBtn');
 
 
 let tabs = []; 
@@ -125,9 +125,11 @@ function updateTitle() {
 newTabBtn.onclick = () => addTab();
 qSAddTabBtn.onclick = () => addTab();
 
+openFileBtn.onclick = () => openFile();
+qSOpenFileBtn.onclick = () => openFile();
 
-openFileBtn.onclick = async () => {
-    try {
+async function openFile() {
+     try {
         const res = await fetch('/api/open', { 
             method: 'POST'
         });
@@ -138,16 +140,18 @@ openFileBtn.onclick = async () => {
 
         const data = await res.json();
 
-        addTab({ title: basename(data.filePath), content: data.content, path: data.filePath})
+        addTab({ title: basename(data.filePath), content: convertTextToHtml(data.content), path: data.filePath})
 
     } catch (e) {
         console.error('ERROR #001: OPEN FILE ERROR: ' + e);
         alert('Fehler beim Öffnen der Datei (Fehler #001)! \n \nWeitere Informationen sind in der Konsole zu finden.');
     }
-};
+}
 
-saveFileBtn.onclick = async () => {
-    
+saveFileBtn.onclick = () => saveFile();
+qSSaveFileBtn.onclick = () => saveFile();
+
+async function saveFile() {
     const t = getActiveTab();
 
     if(!t)
@@ -161,7 +165,7 @@ saveFileBtn.onclick = async () => {
         const res = await fetch('/api/save', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filePath: t.path, content: getPlainTextFromEditor() })
+            body: JSON.stringify({ filePath: t.path, content: convertHtmlToText() })
         });
 
         t.content = editor.innerHTML;
@@ -173,9 +177,11 @@ saveFileBtn.onclick = async () => {
         console.error('ERROR #011: SAVE FILE ERROR: ' + e);
         alert('Fehler beim Speichern der Datei (Fehler #011)! \n \nWeitere Informationen sind in der Konsole zu finden.');
     }
-}; 
+}
+
 
 saveFileAsBtn.onclick = () => saveAs();
+qSSaveFileAsBtn.onclick = () => saveAs();
 
 async function saveAs() {
 
@@ -188,7 +194,7 @@ async function saveAs() {
         const res = await fetch('/api/saveas', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: getPlainTextFromEditor(), suggestedName: t.title || 'Unbenannt.txt' })
+            body: JSON.stringify({ content: convertHtmlToText(), suggestedName: t.title || 'Unbenannt.txt' })
         });
 
         console.log("SaveAs content:", editor.innerHTML);
@@ -229,7 +235,7 @@ function basename(p) {
   return p.split(/[\\/]/).pop();
 }
 
-function getPlainTextFromEditor() {
+function convertHtmlToText() {
     let newValue = '';
     let isOnFreshLine = true;
 
@@ -257,14 +263,19 @@ function getPlainTextFromEditor() {
             if (node.nodeType === 3 && node.textContent) {
                 newValue += node.textContent;
             }
-
             parseNodes(node.childNodes);
-            
         });
     }
 
     parseNodes(editor.childNodes);
     return newValue;
+}
+
+function convertTextToHtml(text) {
+    if(!text) 
+        return;
+
+    return text.replace(/\n/g, '<br>');
 }
 
 addTab();

@@ -28,7 +28,7 @@
             
                 <div class="dropdownContent">
                     <button id="newTabBtn">Neuer Tab</button>
-                    <button id="closeLastTabBtn">letzten Tab schließen</button>
+                    <!-- <button id="closeLastTabBtn">letzten Tab schließen</button> -->
                 </div>
             </div>
         
@@ -63,6 +63,20 @@
 
             <!-- Quick Selection -->
             <section class="qSSection" id="qSSection">
+
+                <!-- File Selection -->
+                <div class="qSDiv" id="qSFileDiv">
+                    <div class="qSHeaderDiv" id="qSFileHeaderDiv">
+                        <button class="qSHeaderBtn material-icons qSFileBtns" id="qSOpenFileBtn" title="Datei Öffnen">file_open</button>
+                        <button class="qSHeaderBtn material-icons qSFileBtns" id="qSSaveFileBtn" title="Datei Speichern">save</button>
+                        <button class="qSHeaderBtn material-icons qSFileBtns" id="qSSaveFileAsBtn" title="Datei Speichern unter">save_as</button>
+                    </div>
+                    <footer class="qSFooterDiv">
+                        <p>Dateien</p>
+                    </footer>
+                </div>
+
+                <div class="big-vertical-line"></div>
             
                 <!-- Font Selection -->
                 <div class="qSDiv" id="qSFontDiv">
@@ -145,7 +159,7 @@
         <div class="tabBar" id="tabBar"></div>
 
         <!-- Text Area -->
-        <div id="editor" contenteditable="true" ></div>
+        <div id="editor" contenteditable="true"></div>
 
         <footer class="footer" id="footer">
             <div class="footerDiv">
@@ -159,10 +173,9 @@
             </div>
             <div class="zoomDiv">
                 <span class="material-icons">search</span>
-                <!-- <input type="number" id="zoomInput" oninput="changeZoom()" value="100"></input> -->
-                <p>-</p>
-                <input type="range" id="zoomInput" name="zoom" min="0" max="250" step="10" value="100">
-                <p>+</p>
+                <button class="footerBtn" id="decreaseZoomBtn" title="Zoom um 10% verringern (CTRL + SHIFT + '-')">-</button>
+                <input type="range" id="zoomInput" name="zoom" min="10" max="400" step="10" value="100">
+                <button class="footerBtn" id="increaseZoomBtn" title="Zoom um 10% erhöhen (CTRL + SHIFT + '+')">+</button>
                 <output id="zoomOutput"></output>
             </div>
         </footer>

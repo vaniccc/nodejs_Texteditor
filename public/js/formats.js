@@ -1,15 +1,25 @@
 // #################################### Format Functions ####################################
+const checkmark = document.getElementById('checkmark');
+const lineBreakBtn = document.getElementById('lineBreakBtn');
+
+const fontBoldBtn = document.getElementById('fontBoldBtn');
+const fontItalicBtn = document.getElementById('fontItalicBtn');
+const fontUnderlinedBtn = document.getElementById('fontUnderlinedBtn');
+const fontCrossedBtn = document.getElementById('fontCrossedBtn');
+const fontSizeSelection = document.getElementById('fontSizeSelection');
+const sizeInput = document.getElementById('sizeInput');
+const fontFamilySelection = document.getElementById('fontFamilySelection');
+
 
 let isLineBreakOn = false;
         
 function toggleLineBreak() {
     isLineBreakOn = !isLineBreakOn;
 
-    var checkmark = document.getElementById('checkmark');
     checkmark.classList.toggle('checkmarkclicked'); 
 }
 
-    document.getElementById('editor').addEventListener("focus", function (e) {
+editor.addEventListener("focus", function (e) {
     
     if(isLineBreakOn === true) {
         editor.style.overflowWrap = "break-word";
@@ -30,8 +40,7 @@ function toggleBoldFont() {
 
         const isBold = document.queryCommandState('bold');
 
-        const btn = document.getElementById('fontBoldBtn');
-        btn.classList.toggle('toggleActive', isBold);
+        fontBoldBtn.classList.toggle('toggleActive', isBold);
                
     } catch(e) {
         console.error('ERROR #101 - TOGGLE BOLD FONT ERROR: ' + e);
@@ -45,9 +54,8 @@ function toggleItalicFont() {
         document.execCommand('italic');
 
         const isItalic = document.queryCommandState('italic');
-
-        const btn = document.getElementById('fontItalicBtn');
-        btn.classList.toggle('toggleActive', isItalic);
+        
+        fontItalicBtn.classList.toggle('toggleActive', isItalic);
 
     } catch(e) {
         console.error('ERROR #111 - TOGGLE ITALIC FONT ERROR: ' + e);
@@ -62,8 +70,7 @@ function toggleUnderlinedFont() {
 
         const isUnderlined = document.queryCommandState('underline');
 
-        const btn = document.getElementById('fontUnderlinedBtn');
-        btn.classList.toggle('toggleActive', isUnderlined);
+        fontUnderlinedBtn.classList.toggle('toggleActive', isUnderlined);
 
     } catch(e) {
         console.error('ERROR #121 - TOGGLE UNDERLINED FONT ERROR: ' + e);
@@ -78,8 +85,7 @@ function toggleStrikeThroughFont() {
 
         const isStrikeThrough = document.queryCommandState('strikeThrough');
 
-        const btn = document.getElementById('fontCrossedBtn');
-        btn.classList.toggle('toggleActive', isStrikeThrough);
+        fontCrossedBtn.classList.toggle('toggleActive', isStrikeThrough);
 
     } catch(e) {
         console.error('ERROR #131 - TOGGLE STRIKETHROUGH FONT ERROR: ' + e);
@@ -90,17 +96,15 @@ function toggleStrikeThroughFont() {
 function setSelectedSize() {
     try {
 
-        var selection = document.getElementById('fontSizeSelection');
-        var selectionValue = selection.value;
-
-        var sizeInput = document.getElementById('sizeInput');
+        var selectionValue = fontSizeSelection.value;
+        
         sizeInput.value = selectionValue;
 
         changeFontSize(sizeInput.value);
 
     } catch(e) {
-        console.error('ERROR #142 - CHANGING FONT SIZE ERROR: ' + e);
-        alert('Fehler beim Ändern der Schriftgröße (Fehler #142)! \n Weitere Informationen sind in der Konsole zu finden.');
+        console.error('ERROR #141 - CHANGING FONT SIZE ERROR: ' + e);
+        alert('Fehler beim Ändern der Schriftgröße (Fehler #141)! \n Weitere Informationen sind in der Konsole zu finden.');
     }
 }
 setSelectedSize();
@@ -108,13 +112,11 @@ setSelectedSize();
 function setFontSize() {
     try {
 
-        var sizeInput = document.getElementById('sizeInput');
-
         changeFontSize(sizeInput.value);
 
     } catch(e) {
-        console.error('ERROR #141 - CHANGING FONT SIZE ERROR: ' + e);
-        alert('Fehler beim Ändern der Schriftgröße (Fehler #141)! \n Weitere Informationen sind in der Konsole zu finden.');
+        console.error('ERROR #142 - CHANGING FONT SIZE ERROR: ' + e);
+        alert('Fehler beim Ändern der Schriftgröße (Fehler #142)! \n Weitere Informationen sind in der Konsole zu finden.');
     }
 }
 
@@ -139,9 +141,8 @@ function changeFontSize(sizeInputValue) {
 
 function changeFontFamily() {
     try {
-
-        var selection = document.getElementById('fontFamilySelection');
-        var value = selection.value;
+        
+        var value = fontFamilySelection.value;
 
         switch(value) {
             case "arial":
@@ -167,14 +168,14 @@ function changeFontFamily() {
 
 // ################# Eventlisteners (Function Calls) #################
 
-document.getElementById('lineBreakBtn').addEventListener("click", toggleLineBreak);
+lineBreakBtn.addEventListener("click", toggleLineBreak);
 
-document.getElementById('fontBoldBtn').addEventListener("click", toggleBoldFont);
-document.getElementById('fontItalicBtn').addEventListener("click", toggleItalicFont);
-document.getElementById('fontUnderlinedBtn').addEventListener("click", toggleUnderlinedFont);
-document.getElementById('fontCrossedBtn').addEventListener("click", toggleStrikeThroughFont);
+fontBoldBtn.addEventListener("click", toggleBoldFont);
+fontItalicBtn.addEventListener("click", toggleItalicFont);
+fontUnderlinedBtn.addEventListener("click", toggleUnderlinedFont);
+fontCrossedBtn.addEventListener("click", toggleStrikeThroughFont);
 
-document.getElementById('sizeInput').addEventListener("input", setFontSize);
-document.getElementById('fontSizeSelection').addEventListener("change", setSelectedSize);
+sizeInput.addEventListener("input", setFontSize);
+fontSizeSelection.addEventListener("change", setSelectedSize);
 
-document.getElementById('fontFamilySelection').addEventListener("change", changeFontFamily);
+fontFamilySelection.addEventListener("change", changeFontFamily);

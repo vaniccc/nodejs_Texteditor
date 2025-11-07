@@ -1,12 +1,19 @@
 // #################################### Footer Functions ####################################
 
+const words = document.getElementById('words');
+
 const zoomInput = document.getElementById('zoomInput');
+const zoomOutput = document.getElementById('zoomOutput');
+
+const decreaseZoomBtn = document.getElementById('decreaseZoomBtn');
+const increaseZoomBtn = document.getElementById('increaseZoomBtn');
+
+let zoom = 100;
 
 function WordCount() {
     try {
         const editorString = editor.innerHTML.toString();
                
-        const words = document.getElementById('words');
         words.innerHTML = 'Wörter: ' + editorString.split(" ").length;
     } catch(e) {
         console.error('ERROR #501 - COUNTING WORDS ERROR: ' + e);
@@ -15,12 +22,13 @@ function WordCount() {
 }
 WordCount();
 
+
 function changeZoom() {
     try {
-        const zoomInputValue = zoomInput.value;
+        zoom = zoomInput.value;
 
-        console.log(`Zoom auf ${zoomInputValue} gestellt.`);
-        editor.style.zoom = zoomInputValue + '%';
+        //console.log(`Zoom auf ${zoom} gestellt.`);
+        editor.style.zoom = zoom + '%';
 
         outputZoomValue();
     } catch(e) {
@@ -29,24 +37,63 @@ function changeZoom() {
     }
 }
 
+function increaseZoomByTen() {
+    try {
+        if(zoom >= 400 ) 
+            return;
+        
+        zoom = zoom + 10;
+
+        zoomInput.value = zoom;
+
+        //console.log(`Zoom auf ${zoom} gestellt.`);
+        editor.style.zoom = zoom + '%';
+
+        outputZoomValue();
+    } catch(e) {
+        console.error('ERROR #602 - ZOOMING IN ERROR: ' + e);
+        alert('Fehler beim rein Zoomen (Fehler #602)! \n Weitere Informationen sind in der Konsole zu finden.');
+    }
+}
+
+function decreaseZoomByTen() {
+    try {
+        if(zoom <= 10 ) {
+            return;
+        }
+        zoom = zoom - 10;
+
+        zoomInput.value = zoom;
+
+        //console.log(`Zoom auf ${zoom} gestellt.`);
+        editor.style.zoom = zoom + '%';
+
+        outputZoomValue();
+    } catch(e) {
+        console.error('ERROR #603 - ZOOMING OUT ERROR: ' + e);
+        alert('Fehler beim raus Zoomen (Fehler #603)! \n Weitere Informationen sind in der Konsole zu finden.');
+    }
+}
+
 function outputZoomValue() {
     try {
-
-        const zoomInputValue = zoomInput.value;
-
-        const zoomOutput = document.getElementById('zoomOutput');
-        zoomOutput.innerHTML = zoomInputValue + '%';
-
+        zoomOutput.innerHTML = zoom + '%';
     } catch(e) {
-        console.error('ERROR #602 - ZOOM OUTPUT ERROR: ' + e);
-        alert('Fehler beim Aufgeben der Zoom % (Fehler #602)! \n Weitere Informationen sind in der Konsole zu finden.');
+        console.error('ERROR #604 - ZOOM OUTPUT ERROR: ' + e);
+        alert('Fehler beim Ausgeben der Zoomstärke (Fehler #602)! \n Weitere Informationen sind in der Konsole zu finden.');
     }
 }
 outputZoomValue();
 
 // ################# Eventlisteners (Function Calls) #################
 
-document.getElementById('editor').addEventListener("input", WordCount);
+editor.addEventListener("input", WordCount);
 
-document.getElementById('zoomInput').addEventListener("input", changeZoom);
+zoomInput.addEventListener("input", changeZoom);
+
+increaseZoomBtn.addEventListener('click', increaseZoomByTen);
+decreaseZoomBtn.addEventListener('click', decreaseZoomByTen);
+
+
+
 

@@ -188,7 +188,61 @@ header {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-/* Font Div Style (Start) */
+
+
+/* Selection Style */
+
+#qSFileDiv {
+    width: 6%;
+    height: 100%;
+    padding-left: 5px;
+    transition: all 0.25s;
+}
+
+#qSFileHeaderDiv {
+    justify-content: space-between;
+}
+
+.qSFileBtns {
+    width: 1.75rem;
+    font-size: 14px;
+    color: purple;
+}
+
+#qSOpenFileBtn {
+    margin-left: 5px;
+}
+
+#qSSaveFileAsBtn {
+    margin-right: 5px;
+}
+
+#qSFontDiv {
+    width: 20%;
+    height: 100%;
+    padding-left: 5px;
+    transition: all 0.25s;
+}
+
+#fontFamilySelection {
+    width: 30%;
+    margin-right: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#arial {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#courierNew {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#timesNewRoman {
+    font-family: 'Times New Roman', Times, serif;
+}
 
 #selectable-Div {
     position: relative;
@@ -217,33 +271,6 @@ header {
 
 #sizeInput {
     background-color: transparent;
-}
-
-#qSFontDiv {
-    width: 20%;
-    height: 100%;
-    padding-left: 5px;
-    transition: all 0.25s;
-}
-
-#fontFamilySelection {
-    width: 30%;
-    margin-right: 5px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-#arial {
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-#courierNew {
-    font-family: 'Courier New', Courier, monospace;
-}
-
-#timesNewRoman {
-    font-family: 'Times New Roman', Times, serif;
 }
 
 .fontBold {
@@ -406,10 +433,24 @@ header {
     margin-right: 10px;
 }
 
-.zoomDiv p {
+/* .zoomDiv p {
     height: 100%;
     font-size: 20px;
     margin-left: 5px;
+} */
+
+.footerBtn {
+    height: 80%;
+    width: 5%;
+    border-radius: 6px;
+    border: none;
+    background-color: transparent;
+    transition: all 0.25s;
+}
+
+.footerBtn:hover {
+    background-color: rgb(185, 182, 182);
+    transition: all 0.25s;
 }
 
 .zoomDiv input {
@@ -506,6 +547,11 @@ header {
 .footer-dark-mode {
     background-color: rgb(63, 62, 62);
     border-top: 1px solid white;
+    color: white;
+    transition: all 0.25s;
+}
+
+.footerBtn-dark-mode {
     color: white;
     transition: all 0.25s;
 }
