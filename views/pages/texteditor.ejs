@@ -53,8 +53,12 @@
             
                 <div class="dropdownContent" id="userDropdown">
                     <p id="usernameDisplay"></p>
-                    <button id="logoutBtn" >Logout</button>
+                    <button id="logoutBtn">Logout</button>
                 </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="headerButton" id="helpHeaderButton">Hilfe</button>
             </div>
         </header>
 
@@ -68,7 +72,7 @@
                 <div class="qSDiv" id="qSFileDiv">
                     <div class="qSHeaderDiv" id="qSFileHeaderDiv">
                         <button class="qSHeaderBtn material-icons qSFileBtns" id="qSOpenFileBtn" title="Datei Öffnen">file_open</button>
-                        <button class="qSHeaderBtn material-icons qSFileBtns" id="qSSaveFileBtn" title="Datei Speichern">save</button>
+                        <button class="qSHeaderBtn material-icons qSFileBtns" id="qSSaveFileBtn" title="Datei Speichern (STRG + S)">save</button>
                         <button class="qSHeaderBtn material-icons qSFileBtns" id="qSSaveFileAsBtn" title="Datei Speichern unter">save_as</button>
                     </div>
                     <footer class="qSFooterDiv">
@@ -110,6 +114,9 @@
                             </select>
                         </div>
 
+                        <div class="small-vertical-line"></div>
+                            <button class="qSHeaderBtn material-icons" id="increaseFontBtn" title="Text um einen Schritt vergrößern (STRG + SHIFT + >)">text_increase</button>
+                            <button class="qSHeaderBtn material-icons" id="decreaseFontBtn" title="Text um einen Schritt verkleinern (STRG + <)">text_decrease</button>
                         <div class="small-vertical-line"></div>
 
                         <button class="qSHeaderBtn fontBold" id="fontBoldBtn" title="Fett (STRG + ALT + F)">F</button>
@@ -179,6 +186,26 @@
                 <output id="zoomOutput"></output>
             </div>
         </footer>
+
+        <!-- Help Popup -->
+        <div class="popup" id="helpPopup">
+            <div class="popupContainer">
+                <div class="popupTitle" id="popupTitle">
+                    <h2>Hilfe</h2>
+                </div>
+                <div class="popupMain">
+                    <h3>Tastenkombinationen / Keybinds</h3>
+
+                    <div>
+                        
+                    </div>
+                </div>
+                <div class="popupBtnDiv">
+                    <button class="popupBtn" id="closePopupBtn">Schließen</button>
+                </div>
+                
+            </div>
+        </div>
     </main>
 
     <script type="text/javascript" src="/js/view.js" defer></script>
@@ -189,5 +216,7 @@
     <script type="text/javascript" src="/js/keybinds.js" defer></script>
    
     <script type="text/javascript" src="/js/files_tabs.js" defer></script>
+
+    <script type="text/javascript" src="/js/popup.js" defer></script>
 </body>
 </html>

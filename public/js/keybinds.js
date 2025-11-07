@@ -15,5 +15,9 @@ document.addEventListener("keydown", function(e) {
     if((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "+") { increaseZoomBtn.click(); }
 
     if((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "-") { decreaseZoomBtn.click(); }
+
+    if((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === ">") { increaseFontBtn.click(); } 
+
+    if((e.ctrlKey || e.metaKey) && e.key === "<") { decreaseFontBtn.click(); } 
 });
 

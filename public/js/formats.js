@@ -8,6 +8,8 @@ const fontUnderlinedBtn = document.getElementById('fontUnderlinedBtn');
 const fontCrossedBtn = document.getElementById('fontCrossedBtn');
 const fontSizeSelection = document.getElementById('fontSizeSelection');
 const sizeInput = document.getElementById('sizeInput');
+const increaseFontBtn = document.getElementById('increaseFontBtn');
+const decreaseFontBtn = document.getElementById('decreaseFontBtn')
 const fontFamilySelection = document.getElementById('fontFamilySelection');
 
 
@@ -103,7 +105,7 @@ function setSelectedSize() {
         changeFontSize(sizeInput.value);
 
     } catch(e) {
-        console.error('ERROR #141 - CHANGING FONT SIZE ERROR: ' + e);
+        console.error('ERROR #141 - SETTING SELECTED FONT SIZE ERROR: ' + e);
         alert('Fehler beim Ändern der Schriftgröße (Fehler #141)! \n Weitere Informationen sind in der Konsole zu finden.');
     }
 }
@@ -115,27 +117,105 @@ function setFontSize() {
         changeFontSize(sizeInput.value);
 
     } catch(e) {
-        console.error('ERROR #142 - CHANGING FONT SIZE ERROR: ' + e);
+        console.error('ERROR #142 - SETTING FONT SIZE ERROR: ' + e);
         alert('Fehler beim Ändern der Schriftgröße (Fehler #142)! \n Weitere Informationen sind in der Konsole zu finden.');
     }
+}
+
+let selectedIndex = fontSizeSelection.selectedIndex;
+let increase = true;
+
+function increaseFontSizeOneStep() {
+    try {
+        if(sizeInput.value <= 72) {
+            selectedIndex = fontSizeSelection.selectedIndex + 1;
+        }
+        
+        increase = true;
+        updateFontSizeOneStep(increase);
+
+        
+    } catch(e) {
+        console.error('ERROR #143 - INCREASING FONT SIZE ERROR: ' + e);
+        alert('Fehler beim vergrößern der Schrift (Fehler #143)! \n Weitere Informationen sind in der Konsole zu finden.');
+    }
+}
+
+function decreaseFontSizeOneStep() {
+    try {
+        if(sizeInput.value <= 72) {
+            selectedIndex = fontSizeSelection.selectedIndex - 1;
+        }
+        increase = false;
+        updateFontSizeOneStep(increase);
+    } catch(e) {
+        console.error('ERROR #144 - DECREASING FONT SIZE ERROR: ' + e);
+        alert('Fehler beim verkleinern der Schrift (Fehler #144)! \n Weitere Informationen sind in der Konsole zu finden.');
+    }
+}
+
+function updateFontSizeOneStep(increase) {
+    try {
+        let number = Number(sizeInput.value);
+
+        if(selectedIndex < 0 ) {
+            sizeInput.value = 1;
+            changeFontSize(sizeInput.value);
+        } 
+        else if(selectedIndex >= fontSizeSelection.length) {
+
+            if(!increase) {
+                if(sizeInput.value === "80")
+                    sizeInput.value = 72;
+                else 
+                    sizeInput.value = number - 10;
+            }
+            else {
+                if(sizeInput.value === fontSizeSelection.value) 
+                    sizeInput.value = 80;
+                else 
+                    sizeInput.value = number + 10;
+            }
+
+        } else {
+            const select = document.querySelector('#fontSizeSelection');
+            select.querySelectorAll('option')[selectedIndex].selected = 'selected';
+
+            var selectionValue = fontSizeSelection.value;
+            sizeInput.value = selectionValue;
+        }
+        changeFontSize(sizeInput.value);
+    
+    } catch(e) {
+        console.error('ERROR #145 - DECREASING FONT SIZE ERROR: ' + e);
+        alert('Fehler beim Ändern der Schrift (Fehler #145)! \n Weitere Informationen sind in der Konsole zu finden.');
+    }
+
 }
 
 function changeFontSize(sizeInputValue) {
     try {
 
-
-        if(sizeInputValue < 1 || sizeInputValue > 1000) {
-            console.warn(`Die Schriftgröße darf nicht weniger als 1px und nicht höher als 1000px sein! Eingebene Größe: ${sizeInputValue}`);
-            alert(`Die Schriftgröße darf nicht weniger als 1px und nicht höher als 1000px sein! \n Eingebene Größe: ${sizeInputValue}`);
-        } else {
-            //document.execCommand("fontSize", sizeInputValue);
+        if(sizeInputValue < 1) {
+            console.warn(`Die Schriftgröße darf nicht kleiner als 1px sein! Eingebene Größe: ${sizeInputValue}`);
+            alert(`Die Schriftgröße darf nicht kleiner als 1px sein! \n Eingebene Größe: ${sizeInputValue}`);
+            sizeInput.value = 1;
+            editor.style.fontSize = sizeInput.value + 'px';
+            
+        } else if(sizeInputValue > 1000) {
+            console.warn(`Die Schriftgröße darf nicht größer als 1000px sein! Eingebene Größe: ${sizeInputValue}`);
+            alert(`Die Schriftgröße darf nicht größer als 1000px sein! \n Eingebene Größe: ${sizeInputValue}`);
+            sizeInput.value = 999;
+            editor.style.fontSize = sizeInput.value + 'px';
+        }
+        else {
             console.log(`Schriftgröße ${sizeInputValue} ausgewählt.`);
             editor.style.fontSize = sizeInputValue + 'px';
         }
 
     } catch(e) {
-        console.error('ERROR #143 - CHANGING FONT SIZE ERROR: ' + e);
-        alert('Fehler beim Ändern der Schriftgröße (Fehler #143)! \n Weitere Informationen sind in der Konsole zu finden.');
+        console.error('ERROR #146 - CHANGING FONT SIZE ERROR: ' + e);
+        alert('Fehler beim Ändern der Schriftgröße (Fehler #146)! \n Weitere Informationen sind in der Konsole zu finden.');
     }
 }
 
@@ -177,5 +257,8 @@ fontCrossedBtn.addEventListener("click", toggleStrikeThroughFont);
 
 sizeInput.addEventListener("input", setFontSize);
 fontSizeSelection.addEventListener("change", setSelectedSize);
+
+increaseFontBtn.addEventListener("click", increaseFontSizeOneStep);
+decreaseFontBtn.addEventListener("click", decreaseFontSizeOneStep);
 
 fontFamilySelection.addEventListener("change", changeFontFamily);
