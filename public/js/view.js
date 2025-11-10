@@ -26,13 +26,13 @@ const formatHeaderButton = document.getElementById('formatHeaderButton');
 const userHeaderButton = document.getElementById('userHeaderButton');
 
 const qSSection = document.getElementById('qSSection');
+const qSFileDiv = document.getElementById('qSFileDiv');
 const qSFontDiv = document.getElementById('qSFontDiv');
 const qSTabDiv = document.getElementById('qSTabDiv');
 const selectableDiv = document.getElementById('selectable-Div');
 const qSThemeSwitchBtn = document.getElementById('qSThemeSwitchBtn');
 const footer = document.getElementById('footer');
 const editorThemeSwitchBtn = document.getElementById('editorThemeSwitchBtn');
-const qSBtn = document.getElementById('qSThemeSwitchBtn');
 
 
 // ################# Login View Functions #################
@@ -101,10 +101,12 @@ function editorThemeSwitch() {
         viewHeaderButton.classList.toggle('headerButton-dark-mode');
         formatHeaderButton.classList.toggle('headerButton-dark-mode');
         userHeaderButton.classList.toggle('headerButton-dark-mode');
+        helpHeaderButton.classList.toggle('headerButton-dark-mode');
   
         // Quick Selection Theme Switch
         qSSection.classList.toggle('qSBar-dark-mode');
 
+        qSFileDiv.classList.toggle('qSDiv-dark-mode');
         qSFontDiv.classList.toggle('qSDiv-dark-mode');
         qSTabDiv.classList.toggle('qSDiv-dark-mode');
 
@@ -114,6 +116,11 @@ function editorThemeSwitch() {
         sizeInput.classList.toggle('sizeInput-dark-mode');
         fontSizeSelection.classList.toggle('comboBox-dark-mode');
 
+        qSOpenFileBtn.classList.toggle('qS-smallBtn-dark-mode');
+        qSSaveFileBtn.classList.toggle('qS-smallBtn-dark-mode');
+        qSSaveFileAsBtn.classList.toggle('qS-smallBtn-dark-mode');
+        increaseFontBtn.classList.toggle('qS-smallBtn-dark-mode');
+        decreaseFontBtn.classList.toggle('qS-smallBtn-dark-mode');
         fontBoldBtn.classList.toggle('qS-smallBtn-dark-mode');
         fontItalicBtn.classList.toggle('qS-smallBtn-dark-mode');
         fontUnderlinedBtn.classList.toggle('qS-smallBtn-dark-mode');
@@ -151,6 +158,6 @@ if (signupThemeSwitchBtn)
 if (editorThemeSwitchBtn) 
     editorThemeSwitchBtn.addEventListener("click", editorThemeSwitch);
 
-if (qSBtn) 
-    qSBtn.addEventListener("click", editorThemeSwitch);
+if (qSThemeSwitchBtn) 
+    qSThemeSwitchBtn.addEventListener("click", editorThemeSwitch);
 
